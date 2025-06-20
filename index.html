@@ -168,14 +168,14 @@
       // ... 여기에 전체 시그 계속 이어붙이기
     ];
 
-    function render(dataList) {
-      table.innerHTML = "";
-      for (const [num, title] of dataList.slice(0, 10)) {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${num}</td><td>${title}</td>`;
-        table.appendChild(row);
-      }
-      counter.textContent = `총 ${dataList.length}개의 시그가 검색되었습니다.`;
+function render(dataList) {
+  table.innerHTML = "";
+  for (const [num, title] of dataList) {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${num}</td><td>${title}</td>`;
+    table.appendChild(row);
+  }
+  counter.textContent = `총 ${dataList.length}개의 시그가 검색되었습니다.`;
     }
 
     input.addEventListener("input", () => {
