@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -14,11 +13,13 @@
       flex-direction: column;
       align-items: center;
     }
+
     h1 {
       font-size: 1.8rem;
       color: #444;
       margin: 2rem 0 1rem;
     }
+
     #search {
       padding: 12px 20px;
       width: 300px;
@@ -27,26 +28,39 @@
       border-radius: 8px;
       margin-bottom: 1.5rem;
     }
-    table {
-      border-collapse: collapse;
+
+    .table-wrapper {
+      max-height: 500px;
+      overflow-y: auto;
       width: 100%;
       max-width: 600px;
       background: white;
       border-radius: 8px;
       box-shadow: 0 0 6px rgba(0,0,0,0.06);
-      overflow: hidden;
     }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
     th, td {
       text-align: left;
       padding: 12px 16px;
     }
+
     th {
       background-color: #f0f0f0;
       border-bottom: 2px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
+
     tr:nth-child(even) {
       background-color: #fafafa;
     }
+
     #counter {
       margin-top: 10px;
       font-size: 0.9rem;
@@ -57,283 +71,64 @@
 <body>
   <h1>뮤니 시그 리스트</h1>
   <input type="text" id="search" placeholder="시그명 또는 번호 검색">
-  <table>
-    <thead>
-      <tr><th>개수</th><th>제목</th></tr>
-    </thead>
-    <tbody id="tableBody">
-      <tr><td>30</td><td>아봉룰렛</td></tr>
-<tr><td>52</td><td>귀여워서미안해</td></tr>
-<tr><td>53</td><td>우마우마</td></tr>
-<tr><td>55</td><td>먕먕</td></tr>
-<tr><td>62</td><td>이고에요</td></tr>
-<tr><td>66</td><td>꼬꼬룰렛</td></tr>
-<tr><td>88</td><td>운동룰렛</td></tr>
-<tr><td>98</td><td>이멀전씨</td></tr>
-<tr><td>99</td><td>비둘기</td></tr>
-<tr><td>109</td><td>러브껌</td></tr>
-<tr><td>110</td><td>A</td></tr>
-<tr><td>111</td><td>콩나물</td></tr>
-<tr><td>119</td><td>화장실 [911]</td></tr>
-<tr><td>120</td><td>버터플라이</td></tr>
-<tr><td>123</td><td>왜요왜요 [1234]</td></tr>
-<tr><td>125</td><td>날라리 [1252]</td></tr>
-<tr><td>130</td><td>포켓몬</td></tr>
-<tr><td>132</td><td>쓸애기 [1323]</td></tr>
-<tr><td>133</td><td>마그네틱 [1332]</td></tr>
-<tr><td>134</td><td>무아 [1333]</td></tr>
-<tr><td>137</td><td>돌핀</td></tr>
-<tr><td>141</td><td>핫해 [1414]</td></tr>
-<tr><td>143</td><td>체온</td></tr>
-<tr><td>145</td><td>빛을따라서 [1452]</td></tr>
-<tr><td>151</td><td>바빠 [1500]</td></tr>
-<tr><td>152</td><td>외모체크 [1520]</td></tr>
-<tr><td>153</td><td>러브쉐이크 [1521]</td></tr>
-<tr><td>156</td><td>옴브리뉴 [1526]</td></tr>
-<tr><td>157</td><td>키딩 [1572]</td></tr>
-<tr><td>160</td><td>YES</td></tr>
-<tr><td>161</td><td>홀드업 [1616]</td></tr>
-<tr><td>162</td><td>뽑기 룰렛</td></tr>
-<tr><td>168</td><td>여봉봉</td></tr>
-<tr><td>178</td><td>색소폰매직</td></tr>
-<tr><td>179</td><td>앙카</td></tr>
-<tr><td>181</td><td>뻐킹뱅어 [1818]</td></tr>
-<tr><td>182</td><td>킹받쥬 [1828]</td></tr>
-<tr><td>185</td><td>벌룬인러브</td></tr>
-<tr><td>187</td><td>엉큰녀</td></tr>
-<tr><td>189</td><td>WTF [1819]</td></tr>
-<tr><td>195</td><td>슈퍼그럼요 [1995]</td></tr>
-<tr><td>196</td><td>SOS</td></tr>
-<tr><td>198</td><td>수파두파</td></tr>
-<tr><td>199</td><td>런웨이 [1997]</td></tr>
-<tr><td>200</td><td>팬서비스 [2000]</td></tr>
-<tr><td>202</td><td>Rabelheart [2002]</td></tr>
-<tr><td>205</td><td>햄토리 [2052]</td></tr>
-<tr><td>210</td><td>BDZ [2100]</td></tr>
-<tr><td>214</td><td>여우 [2044]</td></tr>
-<tr><td>220</td><td>몸매 [2205]</td></tr>
-<tr><td>222</td><td>뱅뱅뱅 [2222]</td></tr>
-<tr><td>223</td><td>솜사탕 [2233]</td></tr>
-<tr><td>229</td><td>부기업 [2292]</td></tr>
-<tr><td>232</td><td>MEOW [2323]</td></tr>
-<tr><td>233</td><td>왠지 [2330]</td></tr>
-<tr><td>235</td><td>아헤가오 [2333]</td></tr>
-<tr><td>236</td><td>매니악 [2337]</td></tr>
-<tr><td>240</td><td>고민중독 [2345]</td></tr>
-<tr><td>248</td><td>나랑사귈래 [2486]</td></tr>
-<tr><td>252</td><td>이리로</td></tr>
-<tr><td>256</td><td>오빠바이러스 [2558]</td></tr>
-<tr><td>262</td><td>우유 [2626]</td></tr>
-<tr><td>287</td><td>핑크레이디 [2877]</td></tr>
-<tr><td>299</td><td>나니가스키 [2999]</td></tr>
-<tr><td>300</td><td>한마디 [3000]</td></tr>
-<tr><td>301</td><td>UP [3001]</td></tr>
-<tr><td>304</td><td>족소리 [3042]</td></tr>
-<tr><td>306</td><td>100개 [3064]</td></tr>
-<tr><td>323</td><td>이쁜여자 [3232]</td></tr>
-<tr><td>324</td><td>너와의모든지금 [3242]</td></tr>
-<tr><td>328</td><td>간바레 [1919]</td></tr>
-<tr><td>333</td><td>큰손시그룰렛</td></tr>
-<tr><td>345</td><td>LSD [3456]</td></tr>
-<tr><td>387</td><td>누나가 알려줄게 [3874]</td></tr>
-<tr><td>389</td><td>EDM [3892]</td></tr>
-<tr><td>473</td><td>전략적후퇴 [4732]</td></tr>
-<tr><td>500</td><td>호미들 [5000]</td></tr>
-<tr><td>504</td><td>오션씨포니 [5042]</td></tr>
-<tr><td>505</td><td>포메 [5052]</td></tr>
-<tr><td>509</td><td>허당박 [5009]</td></tr>
-<tr><td>510</td><td>주차 [5100]</td></tr>
-<tr><td>519</td><td>굿몽 [5195]</td></tr>
-<tr><td>529</td><td>광대 [5290]</td></tr>
-<tr><td>550</td><td>바닥드라군 [4242]</td></tr>
-<tr><td>555</td><td>패스트카 [5555]</td></tr>
-<tr><td>557</td><td>또치 [5557]</td></tr>
-<tr><td>577</td><td>경경경 [5777]</td></tr>
-<tr><td>586</td><td>참숫 [5866]</td></tr>
-<tr><td>588</td><td>오빠하앙 [5882]</td></tr>
-<tr><td>589</td><td>애벌레 [5869]</td></tr>
-<tr><td>599</td><td>주녁깅 [5998]</td></tr>
-<tr><td>696</td><td>영차 [6969]</td></tr>
-<tr><td>697</td><td>흐름유지 [6974]</td></tr>
-<tr><td>709</td><td>철민 [7009]</td></tr>
-<tr><td>712</td><td>와e다 [7123]</td></tr>
-<tr><td>747</td><td>더끼 [7474]</td></tr>
-<tr><td>777</td><td>베네딕트 [7777]</td></tr>
-<tr><td>888</td><td>피리 [8888]</td></tr>
-<tr><td>915</td><td>시그니처 풍선</td></tr>
-<tr><td>999</td><td>약속해 [9999]</td></tr>
-<tr><td>1000</td><td>개쳐발렸쥬 [10000]</td></tr>
-<tr><td>1001</td><td>로드잭 [10001]</td></tr>
-<tr><td>1003</td><td>쥬 [10003]</td></tr>
-<tr><td>1004</td><td>날라가는중 [10004]</td></tr>
-<tr><td>1005</td><td>한량 [10055]</td></tr>
-<tr><td>1007</td><td>풍치</td></tr>
-<tr><td>1008</td><td>시그 [10007]</td></tr>
-<tr><td>1009</td><td>씨나인 [30000]</td></tr>
-<tr><td>1010</td><td>슈가 [10101]</td></tr>
-<tr><td>1012</td><td>만로디</td></tr>
-<tr><td>1014</td><td>감나무 [10014]</td></tr>
-<tr><td>1018</td><td>꿀밤족구 [10018]</td></tr>
-<tr><td>1019</td><td>00년생 [10190]</td></tr>
-<tr><td>1020</td><td>호구모오 [10020]</td></tr>
-<tr><td>1022</td><td>족구졸려 [10222]</td></tr>
-<tr><td>1023</td><td>무드에라 [10023]</td></tr>
-<tr><td>1024</td><td>영원한편돌이 [10024]</td></tr>
-<tr><td>1025</td><td>효진 [10025]</td></tr>
-<tr><td>1028</td><td>ㅅ애리 [10028]</td></tr>
-<tr><td>1029</td><td>딩섬 [10299]</td></tr>
-<tr><td>1030</td><td>황태자 [10030]</td></tr>
-<tr><td>1033</td><td>영삼 [10303]</td></tr>
-<tr><td>1034</td><td>힘빠진토깽이 [10033]</td></tr>
-<tr><td>1036</td><td>삼겹구 [10369]</td></tr>
-<tr><td>1037</td><td>다죽 [10379]</td></tr>
-<tr><td>1039</td><td>천국가볼래 [10039]</td></tr>
-<tr><td>1040</td><td>만개화 [10040]</td></tr>
-<tr><td>1041</td><td>살의리랏다 [10412]</td></tr>
-<tr><td>1042</td><td>라네트 [10442]</td></tr>
-<tr><td>1044</td><td>무공해 [10440]ㅇ</td></tr>
-<tr><td>1046</td><td>네유 [10046]</td></tr>
-<tr><td>1048</td><td>포람페 [10048]</td></tr>
-<tr><td>1050</td><td>창귀 [10050]</td></tr>
-<tr><td>1051</td><td>SOLANA [10501]</td></tr>
-<tr><td>1052</td><td>볼팀 [10052]</td></tr>
-<tr><td>1054</td><td>방송볼거없Na [10054]</td></tr>
-<tr><td>1055</td><td>아로케 [10555]</td></tr>
-<tr><td>1056</td><td>RED [10056]</td></tr>
-<tr><td>1057</td><td>아기뭉멘 [10579]</td></tr>
-<tr><td>1058</td><td>오베R [10058]</td></tr>
-<tr><td>1060</td><td>개물소유동 [10060]</td></tr>
-<tr><td>1065</td><td>물개 [10065]</td></tr>
-<tr><td>1068</td><td>뽕뿡뚱땅 [10068]</td></tr>
-<tr><td>1070</td><td>초월 [10070]</td></tr>
-<tr><td>1071</td><td>왕자지원 [10071]</td></tr>
-<tr><td>1072</td><td>STX이철민 [10720]</td></tr>
-<tr><td>1073</td><td>김복덩v [10073]</td></tr>
-<tr><td>1074</td><td>헤븐샷 [10074]</td></tr>
-<tr><td>1075</td><td>바크콜브 [10075]</td></tr>
-<tr><td>1076</td><td>커즈:D [10076]</td></tr>
-<tr><td>1077</td><td>캐쉬건 [10077]</td></tr>
-<tr><td>1078</td><td>빵맨 [10078]</td></tr>
-<tr><td>1079</td><td>터미널 [10079]</td></tr>
-<tr><td>1080</td><td>호구야매 [10080]</td></tr>
-<tr><td>1082</td><td>키다리아저씨 [10082]</td></tr>
-<tr><td>1084</td><td>배틀탄마린 [10084]</td></tr>
-<tr><td>1087</td><td>플진 [10087]</td></tr>
-<tr><td>1088</td><td>v8_멜로디 [10088]</td></tr>
-<tr><td>1089</td><td>미니빵꾸 [10089]</td></tr>
-<tr><td>1090</td><td>드러오는문 [10090]</td></tr>
-<tr><td>1094</td><td>종로왕김두한 [10094]</td></tr>
-<tr><td>1095</td><td>시간을구독중 [10095]</td></tr>
-<tr><td>1097</td><td>큰코인러형규 [10097]</td></tr>
-<tr><td>1099</td><td>람보르기니 [10099]</td></tr>
-<tr><td>1100</td><td>은유화1 [11001]</td></tr>
-<tr><td>1101</td><td>강남일개미 [11011]</td></tr>
-<tr><td>1103</td><td>뮤니란곰</td></tr>
-<tr><td>1104</td><td>love1004 [10104]</td></tr>
-<tr><td>1107</td><td>징징쓰v [11077]</td></tr>
-<tr><td>1109</td><td>강포커 [10109]</td></tr>
-<tr><td>1110</td><td>레트로시크 [11110]</td></tr>
-<tr><td>1111</td><td>라페라리 [11111]</td></tr>
-<tr><td>1112</td><td>야부리맨 [11112]</td></tr>
-<tr><td>1117</td><td>Spurs7 [11117]</td></tr>
-<tr><td>1119</td><td>JUNU [10119]</td></tr>
-<tr><td>1122</td><td>남순커플 [11220]</td></tr>
-<tr><td>1124</td><td>퀘이샤 [10724]</td></tr>
-<tr><td>1133</td><td>산멘 [11333]</td></tr>
-<tr><td>1142</td><td>부비 [10042]</td></tr>
-<tr><td>1147</td><td>Unplug [11476]</td></tr>
-<tr><td>1151</td><td>시그니엘스 [11511]</td></tr>
-<tr><td>1157</td><td>모던닉 [11579]</td></tr>
-<tr><td>1164</td><td>라페스타 [11164]</td></tr>
-<tr><td>1170</td><td>오늘만산다 [10170]</td></tr>
-<tr><td>1172</td><td>충충충 [10772]</td></tr>
-<tr><td>1177</td><td>폼피츠 [10770]</td></tr>
-<tr><td>1182</td><td>코비커리 [10824]</td></tr>
-<tr><td>1188</td><td>C9임 [11888]</td></tr>
-<tr><td>1199</td><td>인생뭐있어 [10999]</td></tr>
-<tr><td>1225</td><td>박우신2 [12225]</td></tr>
-<tr><td>1228</td><td>카리# [10228]</td></tr>
-<tr><td>1252</td><td>v12_멜로디 [12520]</td></tr>
-<tr><td>1258</td><td>앙드로 [10258]</td></tr>
-<tr><td>1262</td><td>많이사랑해뮤니야 [12462]</td></tr>
-<tr><td>1275</td><td>띠멘 [12752]</td></tr>
-<tr><td>1308</td><td>쫄병 [13088]</td></tr>
-<tr><td>1357</td><td>썸머G [10357]</td></tr>
-<tr><td>1400</td><td>식이 [14140]</td></tr>
-<tr><td>1415</td><td>야이 ~ 개생키야</td></tr>
-<tr><td>1444</td><td>세비지 [14444]</td></tr>
-<tr><td>1462</td><td>시그니처 풍선</td></tr>
-<tr><td>1515</td><td>짭승환 [15151]</td></tr>
-<tr><td>1551</td><td>초코핑</td></tr>
-<tr><td>1521</td><td>오승환이다 [10521]</td></tr>
-<tr><td>1567</td><td>오렌지신정원 [10567]</td></tr>
-<tr><td>1587</td><td>싸대기떄리자 [15874]</td></tr>
-<tr><td>1666</td><td>Heart [10666]</td></tr>
-<tr><td>1676</td><td>피카츄69 [16767]</td></tr>
-<tr><td>1696</td><td>골타69 [16969]</td></tr>
-<tr><td>1697</td><td>촌캉스 [16974]</td></tr>
-<tr><td>1782</td><td>돈기브업 [10782]</td></tr>
-<tr><td>1785</td><td>아기푸멘 [10785]</td></tr>
-<tr><td>1887</td><td>광팔88 [10888]</td></tr>
-<tr><td>1888</td><td>작은예멘 [18888]</td></tr>
-<tr><td>1892</td><td>좀비 [10892]</td></tr>
-<tr><td>1999</td><td>조로 [19999]</td></tr>
-<tr><td>2000</td><td>핸드클랩 [20000]</td></tr>
-<tr><td>2020</td><td>큰호구모오 [20020]</td></tr>
-<tr><td>2024</td><td>큰영원한편돌이 [20024]</td></tr>
-<tr><td>2025</td><td>큰오승환 [20252]</td></tr>
-<tr><td>2042</td><td>큰라네트 [20442]</td></tr>
-<tr><td>2050</td><td>쑥대머리 [20050]</td></tr>
-<tr><td>2057</td><td>뭉크뭉 [20579]</td></tr>
-<tr><td>2069</td><td>DOPAMINE69 [20069]</td></tr>
-<tr><td>2078</td><td>아쿠아푸멘 [20785]</td></tr>
-<tr><td>2109</td><td>킹포커 [20109]</td></tr>
-<tr><td>2112</td><td>슈퍼야부리맨 [21112]</td></tr>
-<tr><td>2152</td><td>BIG v12_멜로디 [21252]</td></tr>
-<tr><td>2258</td><td>큰앙드로 [20258]</td></tr>
-<tr><td>2444</td><td>큰세비지 [24444]</td></tr>
-<tr><td>2486</td><td>v12_로맨스 [29486]</td></tr>
-<tr><td>2587</td><td>큰싸대기떄리자 [25874]</td></tr>
-<tr><td>2676</td><td>큰피카츄69 [26767]</td></tr>
-<tr><td>2696</td><td>큰골타69 [26969]</td></tr>
-<tr><td>2697</td><td>큰촌캉스 [26974]</td></tr>
-<tr><td>2862</td><td>시그니처 풍선</td></tr>
-<tr><td>2888</td><td>티미시아나 [28888]</td></tr>
-<tr><td>2892</td><td>892소닉 [20892]</td></tr>
-<tr><td>2911</td><td>LAFESTAR [29111]</td></tr>
-<tr><td>2957</td><td>슈퍼뭉크뭉 [29579]</td></tr>
-<tr><td>2989</td><td>대쫄병 [29898]</td></tr>
-<tr><td>2999</td><td>큰예멘 [29999]</td></tr>
-<tr><td>3069</td><td>69어쎔블 [30069]</td></tr>
-<tr><td>5252</td><td>v12_로신</td></tr>
-<tr><td>5962</td><td>시그니처 풍선</td></tr>
-<tr><td>10520</td><td>큰소닉</td></tr>
-<tr><td>12462</td><td>시그니처 풍선</td></tr>
-    </tbody>
-  </table>
-  <div id="counter">총 247개의 시그가 있습니다.</div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr><th>번호</th><th>제목</th></tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- 여기에 <tr><td>번호</td><td>제목</td></tr> 추가 -->
+      </tbody>
+    </table>
+  </div>
+
+  <div id="counter">총 0개의 시그가 있습니다.</div>
 
   <script>
-    const input = document.getElementById("search");
     const table = document.getElementById("tableBody");
+    const input = document.getElementById("search");
     const counter = document.getElementById("counter");
-    const originalRows = Array.from(table.querySelectorAll("tr"));
+
+    const data = [
+      ["30", "아봉룰렛"],
+      ["52", "귀여워서미안해"],
+      ["53", "우마우마"],
+      ["55", "먕먕"],
+      ["62", "이고에요"],
+      ["66", "꼬꼬룰렛"],
+      ["88", "운동룰렛"],
+      ["98", "이멀전씨"],
+      ["99", "비둘기"],
+      ["109", "러브껌"],
+      ["110", "A"],
+      ["111", "콩나물"],
+      // ... 전체 데이터 계속 추가 ...
+      ["12462", "시그니처 풍선"]
+    ];
+
+    let allRows = [];
+
+    function render(dataList) {
+      table.innerHTML = "";
+      const limited = dataList.slice(0, 10);
+      for (const [num, title] of limited) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${num}</td><td>${title}</td>`;
+        table.appendChild(row);
+      }
+      counter.textContent = `총 ${limited.length}개의 시그가 검색되었습니다.`;
+    }
 
     input.addEventListener("input", () => {
       const keyword = input.value.trim().toLowerCase();
-      let count = 0;
-      table.innerHTML = "";
-
-      for (const row of originalRows) {
-        const text = row.textContent.toLowerCase();
-        if (text.includes(keyword)) {
-          table.appendChild(row);
-          count++;
-          if (count >= 10) break;
-        }
-      }
-      counter.textContent = `총 ${count}개의 시그가 검색되었습니다.`;
+      const filtered = data.filter(([num, title]) =>
+        num.includes(keyword) || title.toLowerCase().includes(keyword)
+      );
+      render(filtered);
     });
+
+    render(data);
   </script>
 </body>
 </html>
