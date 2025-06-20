@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>시그 검색</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .centered {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 15px;
+      width: 300px;
+      font-size: 20px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      outline: none;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+      width: 90%;
+      max-width: 600px;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    li {
+      padding: 5px 10px;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="centered">
+    <input type="text" id="search" placeholder="시그 검색..." />
+  </div>
+  <ul id="namelist">
+    <!-- 여기에 명단이 들어감 -->
+    <li>30 아봉룰렛</li>
+    <li>52 귀여워서미안해</li>
+    <li>53 우마우마</li>
+    <li>55 먕먕</li>
+    <li>62 이고에요</li>
+    <!-- 나머지 항목은 생략, 실제 파일에서 붙여넣으면 됨 -->
+  </ul>
+
+  <script>
+    const input = document.getElementById("search");
+    const list = document.getElementById("namelist");
+    const items = list.getElementsByTagName("li");
+
+    input.addEventListener("input", function () {
+      const value = this.value.toLowerCase();
+      for (let item of items) {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(value) ? "" : "none";
+      }
+    });
+  </script>
+</body>
+</html>
