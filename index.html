@@ -341,15 +341,14 @@
   ["12462", "시그니처 풍선"]
 ];
 
-    function render(dataList) {
-      table.innerHTML = "";
-      const limited = dataList.slice(0, 10);
-      for (const [num, title] of limited) {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${num}</td><td>${title}</td>`;
-        table.appendChild(row);
-      }
-      counter.textContent = `총 ${limited.length}개의 시그가 검색되었습니다.`;
+function render(dataList) {
+  table.innerHTML = "";
+  for (const [num, title] of dataList) {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${num}</td><td>${title}</td>`;
+    table.appendChild(row);
+  }
+  counter.textContent = `총 ${dataList.length}개의 시그가 검색되었습니다.`;
     }
 
     input.addEventListener("input", () => {
