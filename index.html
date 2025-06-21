@@ -86,13 +86,12 @@
   <div id="counter">총 0개의 시그가 검색되었습니다.</div>
 
   <script>
-    const table   = document.getElementById("tableBody");
-    const input   = document.getElementById("search");
+    const table = document.getElementById("tableBody");
+    const input = document.getElementById("search");
     const counter = document.getElementById("counter");
 
-    // 기존 데이터(제목 안에 [엑셀개수] 포함)
     const data = [
-   ["52", "귀여워서미안해", ""],
+["52", "귀여워서미안해", ""],
   ["53", "우마우마", ""],
   ["55", "먕먕", ""],
   ["62", "이고에요", ""],
@@ -138,7 +137,7 @@
   ["204", "우주로", "2025"],
   ["205", "햄토리", "2052"],
   ["206", "스토리베리러쉬", "2068"],
-  ["210", "BDZ", "1717"],
+  ["210", "BDZ [2100] 수정본 1717", ""],
   ["222", "뱅뱅뱅", "2222"],
   ["223", "넌나의N이되어줘", "2230"],
   ["225", "오늘만ILOVEYOU", "2225"],
@@ -375,34 +374,24 @@
   ["10520", "큰소닉", ""]
     ];
 
-    // ───────────────────────────────── render 함수
-    function render(list){
+    function render(list) {
       table.innerHTML = "";
-      for(const [num, rawTitle] of list){
-        // 엑셀개수 추출
-        const m   = rawTitle.match(/\[ *(\d+) *\]/);
-        const excelCnt  = m ? m[1] : "";
-        const cleanTitle = m ? rawTitle.replace(/\s*\[ *\d+ *\]\s*/,"").trim() : rawTitle;
-
-        const tr  = document.createElement("tr");
-        tr.innerHTML = `<td>${num}</td><td>${cleanTitle}</td><td>${excelCnt}</td>`;
+      for (const [num, title, excel] of list) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${num}</td><td>${title}</td><td>${excel}</td>`;
         table.appendChild(tr);
       }
       counter.textContent = `총 ${list.length}개의 시그가 검색되었습니다.`;
     }
 
-    // ───────────────────────────────── 검색
     input.addEventListener("input", () => {
       const kw = input.value.trim().toLowerCase();
-      const filtered = data.filter(([num, title])=>{
-        const plainTitle = title.toLowerCase().replace(/\[ *\d+ *\]/,"").trim();
-        const excel      = (title.match(/\[ *(\d+) *\]/)||[])[1]||"";
-        return num.includes(kw) || plainTitle.includes(kw) || excel.includes(kw);
-      });
+      const filtered = data.filter(([num, title, excel]) =>
+        num.includes(kw) || title.toLowerCase().includes(kw) || excel.includes(kw)
+      );
       render(filtered);
     });
 
-    // 초기 출력
     render(data);
   </script>
 </body>
