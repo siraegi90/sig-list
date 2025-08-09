@@ -8,7 +8,6 @@
     :root{
       --accent:#ff80ab; --bg:#fff7fb; --card:#ffffff; --text:#2a2a2a;
       --muted:#7b8494; --border:#f0e3ee; --radius:18px; --shadow:0 10px 30px rgba(255,128,171,.18);
-      /* 중앙 레일/사이드 폭과 간격(여기만 바꾸면 전체가 따라 맞음) */
       --main:700px; --side:300px; --gap:26px;
     }
     *{box-sizing:border-box}
@@ -19,18 +18,27 @@
     }
 
     /* 바깥 래퍼 */
-    .wrap{max-width:1250px; margin:36px auto 48px; padding:0 18px; position:relative}
+    .wrap{max-width:1250px; margin:36px auto 48px; padding:0 18px}
 
-    /* ✅ 중앙 레일: 프로필/메인 카드가 정확히 가운데에 놓이는 700px 트랙 */
-    .rail{width:var(--main); margin:0 auto}
-
-    /* ✅ 사이드바: 중앙선 기준(50%)에서 오른쪽으로 main/2 + gap 만큼 떨어뜨려 배치 */
-    .sidebar{
-      position:sticky; top:24px; width:var(--side);
-      left:calc(50% + (var(--main) / 2) + var(--gap));
+    /* ✅ 중앙 고정 그리드: [좌여백] [중앙700] [사이드300] [우여백] */
+    .layout{
+      display:grid;
+      grid-template-columns: 1fr var(--main) var(--side) 1fr;
+      column-gap: var(--gap);
+      align-items:start;
     }
-    /* 1024px 이하에서는 사이드 숨김 */
-    @media (max-width:1024px){ .sidebar{display:none} }
+    .rail{ grid-column: 2; }       /* 가운데 트랙 */
+    .sidebar{                       /* 오른쪽 트랙 */
+      grid-column: 3;
+      position: sticky; top:24px;
+      width: var(--side);
+    }
+    /* 1024px 이하에서는 1열 */
+    @media (max-width:1024px){
+      .layout{ grid-template-columns: 1fr; }
+      .rail, .sidebar{ grid-column: auto; }
+      .sidebar{ display:none; }
+    }
 
     /* 카드 공통 */
     .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
@@ -103,65 +111,68 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- 중앙 레일: 프로필 + 메인 -->
-    <div class="rail">
-      <!-- 프로필(중앙 700px) -->
-      <section class="card profile" style="margin-bottom:16px">
-        <div class="avatar"><img id="avatar" alt="Profile" /></div>
-        <div>
-          <div class="p-head"><span class="dot"></span><h1>쁠리</h1></div>
-          <div class="p-sub">밝고 귀여운 무드의 방송 ✿ 시그 리스트를 쉽게 찾아보세요</div>
-          <div class="links">
-            <a class="link-btn" href="https://www.youtube.com/@todayisvvely" target="_blank" rel="noopener">
-              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a2.998 2.998 0 0 0-2.112-2.12C19.365 3.5 12 3.5 12 3.5s-7.365 0-9.386.566A2.998 2.998 0 0 0 .502 6.186C0 8.207 0 12 0 12s0 3.793.502 5.814a2.998 2.998 0 0 0 2.112 2.12C4.635 20.5 12 20.5 12 20.5s7.365 0 9.386-.566a2.998 2.998 0 0 0 2.112-2.12C24 15.793 24 12 24 12s0-3.793-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"/></svg>
-              YouTube
-            </a>
-            <a class="link-btn" href="https://www.instagram.com/lee2seol/" target="_blank" rel="noopener">
-              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm8.5 1.5a4.25 4.25 0 0 1 4.25 4.25v8.5a4.25 4.25 0 0 1-4.25 4.25h-8.5a4.25 4.25 0 0 1-4.25-4.25v-8.5a4.25 4.25 0 0 1 4.25-4.25h8.5zm-4.25 3a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5zm0 1.5a4.25 4.25 0 1 1 0 8.5 4.25 4.25 0 0 1 0-8.5zm5.25-.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25z"/></svg>
-              Instagram
-            </a>
+
+    <div class="layout">
+      <!-- 가운데 700px 레일 -->
+      <div class="rail">
+        <!-- 프로필 -->
+        <section class="card profile" style="margin-bottom:16px">
+          <div class="avatar"><img id="avatar" alt="Profile" /></div>
+          <div>
+            <div class="p-head"><span class="dot"></span><h1>쁠리</h1></div>
+            <div class="p-sub">밝고 귀여운 무드의 방송 ✿ 시그 리스트를 쉽게 찾아보세요</div>
+            <div class="links">
+              <a class="link-btn" href="https://www.youtube.com/@todayisvvely" target="_blank" rel="noopener">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a2.998 2.998 0 0 0-2.112-2.12C19.365 3.5 12 3.5 12 3.5s-7.365 0-9.386.566A2.998 2.998 0 0 0 .502 6.186C0 8.207 0 12 0 12s0 3.793.502 5.814a2.998 2.998 0 0 0 2.112 2.12C4.635 20.5 12 20.5 12 20.5s7.365 0 9.386-.566a2.998 2.998 0 0 0 2.112-2.12C24 15.793 24 12 24 12s0-3.793-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"/></svg>
+                YouTube
+              </a>
+              <a class="link-btn" href="https://www.instagram.com/lee2seol/" target="_blank" rel="noopener">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm8.5 1.5a4.25 4.25 0 0 1 4.25 4.25v8.5a4.25 4.25 0 0 1-4.25 4.25h-8.5a4.25 4.25 0 0 1-4.25-4.25v-8.5a4.25 4.25 0 0 1 4.25-4.25h8.5zm-4.25 3a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5zm0 1.5a4.25 4.25 0 1 1 0 8.5 4.25 4.25 0 0 1 0-8.5zm5.25-.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25z"/></svg>
+                Instagram
+              </a>
+            </div>
           </div>
+        </section>
+
+        <!-- 메인 목록 -->
+        <div class="card">
+          <div class="toolbar">
+            <input id="q" type="search" placeholder="검색: 제목 / 숫자…" aria-label="검색" />
+            <select id="sort" aria-label="정렬">
+              <option value="bp-asc">별풍개수 ↑</option>
+              <option value="bp-desc">별풍개수 ↓</option>
+              <option value="title-asc">제목 A–Z</option>
+              <option value="title-desc">제목 Z–A</option>
+            </select>
+            <button class="btn" id="reset">초기화</button>
+            <span class="chip">총 <b id="count">0</b>개의 시그</span>
+          </div>
+
+          <table id="tbl">
+            <thead><tr><th>별풍개수</th><th>제목</th></tr></thead>
+            <tbody id="tbody">
+              <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td></tr>
+            </tbody>
+          </table>
+          <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
         </div>
-      </section>
+      </div><!-- /.rail -->
 
-      <!-- 메인 리스트(중앙 700px, 프로필과 완벽 정렬) -->
-      <div class="card">
-        <div class="toolbar">
-          <input id="q" type="search" placeholder="검색: 제목 / 숫자…" aria-label="검색" />
-          <select id="sort" aria-label="정렬">
-            <option value="bp-asc">별풍개수 ↑</option>
-            <option value="bp-desc">별풍개수 ↓</option>
-            <option value="title-asc">제목 A–Z</option>
-            <option value="title-desc">제목 Z–A</option>
-          </select>
-          <button class="btn" id="reset">초기화</button>
-          <span class="chip">총 <b id="count">0</b>개의 시그</span>
+      <!-- 오른쪽 사이드바 -->
+      <aside class="sidebar">
+        <div class="card side-section">
+          <h3 class="side-title"><span class="dot"></span>쁠리시그</h3>
+          <span class="pill">개인방송 시그</span>
+          <ul class="side-list" id="side-personal"></ul>
         </div>
 
-        <table id="tbl">
-          <thead><tr><th>별풍개수</th><th>제목</th></tr></thead>
-          <tbody id="tbody">
-            <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td></tr>
-          </tbody>
-        </table>
-        <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
-      </div>
-    </div><!-- /.rail -->
-
-    <!-- 오른쪽 사이드바(중앙선 기준으로 우측에 고정) -->
-    <aside class="sidebar">
-      <div class="card side-section">
-        <h3 class="side-title"><span class="dot"></span>쁠리시그</h3>
-        <span class="pill">개인방송 시그</span>
-        <ul class="side-list" id="side-personal"></ul>
-      </div>
-
-      <div class="card side-section" style="margin-top:16px">
-        <h3 class="side-title"><span class="dot"></span>열혈시그</h3>
-        <span class="pill">열혈 TOP</span>
-        <ul class="side-list" id="side-fans"></ul>
-      </div>
-    </aside>
+        <div class="card side-section" style="margin-top:16px">
+          <h3 class="side-title"><span class="dot"></span>열혈시그</h3>
+          <span class="pill">열혈 TOP</span>
+          <ul class="side-list" id="side-fans"></ul>
+        </div>
+      </aside>
+    </div><!-- /.layout -->
   </div><!-- /.wrap -->
 
   <script>
@@ -176,33 +187,15 @@
       { bp: 5782, title: "오직 쁠리" }
     ];
 
-    /* 사이드바 데이터(원하면 여기 SPECIAL을 너 목록으로 교체) */
+    /* 사이드바 데이터(원하면 여기 SPECIAL을 네 배열로 교체) */
     const SPECIAL = {
       personal: [
-      { bp: 1111,  title: "쁠리신호탄" },
-    { bp: 1182,  title: "Today is vvely" },
-    { bp: 1482,  title: "천사쁠리" },
-    { bp: 1486,  title: "노이설지켜" },
-    { bp: 1682,  title: "힘내쁠리" },
-    { bp: 1882,  title: "ONE쁠리" },
-    { bp: 2882,  title: "이쁜쁠리" },
-    { bp: 2998,  title: "노이설소중해" },
-    { bp: 3082,  title: "쁠리응원가" },
-    { bp: 5782,  title: "오직쁠리" },
-    { bp: 5882,  title: "최강쁠플단" },
-    { bp: 8282,  title: "쁠리쁠리" },
-    { bp: 10082, title: "포에버쁠리" },
-    { bp: 15882, title: "배고픈쁠리" },
-    { bp: 28282, title: "이쁜이쁠리" }
+        { bp: 1682, title: "개인방송 시그 — 역팬" },
+        { bp: 3082, title: "한방방셀" },
       ],
       fans: [
-    { bp: 1585, title: "꼴망오빠" },
-    { bp: 1828, title: "카블라" },
-    { bp: 1888, title: "쌉F카블라" },
-    { bp: 2585, title: "슈퍼꼴망오빠" },
-    { bp: 2828, title: "큰카블라" },
-    { bp: 2888, title: "슈퍼카블라" },
-    { bp: 3882, title: "갓카블라" }
+        { bp: 5782, title: "엽기방셀 + 역팬" },
+        { bp: 18882, title: "열혈 전용 — 스페셜" },
       ]
     };
 
