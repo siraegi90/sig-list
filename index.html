@@ -1,398 +1,191 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>뮤니 시그 리스트</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>뮤니's 시그 리스트</title>
+  <!-- 시스템 폰트 스택으로 가볍게 -->
   <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(145deg, #fbeaff, #fff0f5);
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    :root{
+      --accent:#ff80ab; /* 사용자 포인트 컬러 */
+      --bg:#0b0d16;
+      --card:#121528;
+      --text:#e9ecf1;
+      --muted:#9aa3b2;
+      --border:#23283f;
+      --radius:16px;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
     }
-    h1 {
-      font-size: 2rem;
-      color: #a43bbd;
-      margin: 2rem 0 1rem;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px #eac1f5;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(180deg,#0a0c14 0%, #0e1230 100%);
+      color:var(--text); font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      letter-spacing:.1px;
     }
-    #search {
-      padding: 12px 20px;
-      width: 300px;
-      font-size: 16px;
-      border: 2px solid #d492f6;
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
-      background: #fff8fd;
+    .wrap{max-width:1000px; margin:40px auto; padding:0 18px}
+    header{
+      display:flex; align-items:center; gap:14px; margin-bottom:18px;
     }
-    .table-wrapper {
-      max-height: 500px;
-      overflow-y: auto;
-      width: 100%;
-      max-width: 600px;
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(190, 129, 224, 0.2);
-      border: 2px solid #e7b9f3;
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 20px var(--accent)}
+    h1{margin:0; font-size:22px; font-weight:700}
+    .sub{color:var(--muted); font-size:13px}
+    .card{
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:18px;
     }
-    table {
-      border-collapse: collapse;
-      width: 100%;
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
+    input[type="search"], select{
+      background:#0f1330; color:var(--text);
+      border:1px solid var(--border); border-radius:12px;
+      padding:10px 12px; outline:none; width:260px; max-width:100%;
     }
-    th, td {
-      text-align: left;
-      padding: 12px 16px;
+    .chip{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:8px 10px; border:1px solid var(--border); border-radius:999px;
+      font-size:13px; color:var(--muted);
     }
-    th {
-      background-color: #f3d5fb;
-      border-bottom: 2px solid #d6a8e4;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      color: #6e2180;
+    .chip b{color:var(--text)}
+    .btn{
+      background:var(--accent); color:#111; font-weight:700;
+      border:none; border-radius:12px; padding:10px 14px; cursor:pointer;
     }
-    tr:nth-child(even) { background-color: #fdf7ff; }
-    tr:hover          { background-color: #f5e2fa; }
-    #counter {
-      margin-top: 10px;
-      font-size: 0.9rem;
-      color: #555;
+    .btn:active{transform:translateY(1px)}
+    table{
+      width:100%; border-collapse:separate; border-spacing:0;
+      overflow:hidden; border-radius:12px; border:1px solid var(--border);
+      background:#0f1330;
     }
-    @media (max-width: 600px) {
-      body   { padding: 1rem; }
-      h1     { font-size: 1.5rem; text-align: center; }
-      #search         { width: 90%; font-size: 14px; }
-      .table-wrapper  { max-width: 100%; font-size: 14px; }
-      th, td          { padding: 10px 12px; }
-      #counter        { font-size: 0.8rem; }
+    thead th{
+      text-align:left; font-size:13px; color:var(--muted);
+      padding:12px; border-bottom:1px solid var(--border);
+      backdrop-filter:saturate(120%);
+    }
+    tbody td{padding:12px; border-top:1px solid rgba(255,255,255,.04)}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
+    .badge{
+      display:inline-block; padding:4px 8px; border-radius:999px;
+      background:rgba(255,128,171,.15); color:#ffc6da; font-size:12px; font-weight:700;
+    }
+    footer{margin-top:14px; color:var(--muted); font-size:12px; text-align:right}
+    /* 반응형 */
+    @media (max-width:640px){
+      .toolbar{flex-direction:column; align-items:stretch}
+      input[type="search"], select, .btn{width:100%}
+      thead{display:none}
+      table, tbody, tr, td{display:block; width:100%}
+      tbody tr{border-bottom:1px solid var(--border); padding:10px 8px}
+      tbody td{border:none; padding:6px 0}
+      tbody td[data-h]:before{
+        content:attr(data-h) " · "; color:var(--muted); margin-right:6px
+      }
     }
   </style>
 </head>
 <body>
-  <h1>뮤니's 시그 리스트</h1>
-  <input type="text" id="search" placeholder="시그명 또는 개수로 검색">
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr><th>별풍개수</th><th>제목</th><th>엑셀개수</th></tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+  <div class="wrap">
+    <header>
+      <span class="dot"></span>
+      <div>
+        <h1>뮤니’s 시그 리스트</h1>
+        <div class="sub">별풍개수·제목·엑셀개수로 조회</div>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="검색: 제목 / 숫자 입력…" />
+        <select id="sort">
+          <option value="bp-asc">별풍개수 ↑</option>
+          <option value="bp-desc">별풍개수 ↓</option>
+          <option value="title-asc">제목 A–Z</option>
+          <option value="title-desc">제목 Z–A</option>
+        </select>
+        <span class="chip">총 <b id="count">0</b>개의 시그</span>
+        <button class="btn" id="reset">초기화</button>
+      </div>
+
+      <table id="tbl">
+        <thead>
+          <tr>
+            <th style="width:140px">별풍개수</th>
+            <th>제목</th>
+            <th style="width:140px">엑셀개수</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <!-- 데이터가 없을 때 안내 -->
+          <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td><td data-h="엑셀개수">–</td></tr>
+        </tbody>
+      </table>
+
+      <footer id="empty">필요한 데이터를 올리면 자동으로 갱신됩니다.</footer>
+    </div>
   </div>
-  <div id="counter">총 0개의 시그가 검색되었습니다.</div>
 
+  <!-- 가벼운 스크립트: 검색/정렬만 -->
   <script>
-    const table = document.getElementById("tableBody");
-    const input = document.getElementById("search");
-    const counter = document.getElementById("counter");
-
-    const data = [
-["52", "귀여워서미안해", ""],
-  ["53", "우마우마", ""],
-  ["55", "먕먕", ""],
-  ["62", "이고에요", ""],
-  ["98", "이멀전씨", ""],
-  ["99", "비둘기", ""],
-  ["109", "러브껌", ""],
-  ["110", "A", ""],
-  ["111", "콩나물", ""],
-  ["119", "화장실", ""],
-  ["120", "버터플라이", ""],
-  ["121", "진압해", "1212"],
-  ["123", "왜요왜요", "1234"],
-  ["125", "날라리", "1252"],
-  ["130", "포켓몬", ""],
-  ["132", "쓸애기", "1323"],
-  ["133", "마그네틱", "1332"],
-  ["134", "무아", "1333"],
-  ["137", "돌핀", ""],
-  ["139", "쌔끈빠끈", "1329"],
-  ["143", "체온", ""],
-  ["145", "빛을따라서", "1452"],
-  ["151", "바빠", "1500"],
-  ["152", "외모체크", "1520"],
-  ["153", "러브쉐이크", "1521"],
-  ["157", "키딩", "1572"],
-  ["158", "찔려", "1528"],
-  ["160", "YES", ""],
-  ["168", "여봉봉", ""],
-  ["178", "색소폰매직", ""],
-  ["179", "앙카", ""],
-  ["181", "뻐킹뱅어", "1818"],
-  ["182", "킹받쥬", "1828"],
-  ["185", "벌룬인러브", ""],
-  ["187", "엉큰녀", ""],
-  ["189", "WTF", "1819"],
-  ["196", "SOS", ""],
-  ["198", "수파두파", ""],
-  ["199", "런웨이", "1997"],
-  ["200", "팬서비스", "2000"],
-  ["201", "위플래시", "2018"],
-  ["202", "Rabelheart", "2002"],
-  ["203", "I want you", "2033"],
-  ["204", "우주로", "2025"],
-  ["205", "햄토리", "2052"],
-  ["206", "스토리베리러쉬", "2068"],
-  ["210", "BDZ [2100] 수정본 1717", ""],
-  ["222", "뱅뱅뱅", "2222"],
-  ["223", "넌나의N이되어줘", "2230"],
-  ["225", "오늘만ILOVEYOU", "2225"],
-  ["229", "부기업", "2292"],
-  ["232", "MEOW", "2323"],
-  ["233", "왠지", "2330"],
-  ["240", "고민중독", "2345"],
-  ["242", "응응", "2424"],
-  ["248", "나랑사귈래", "2486"],
-  ["252", "이리로", ""],
-  ["255", "라라리라라", "2525"],
-  ["256", "오빠바이러스", "2558"],
-  ["258", "이루리", "2582"],
-  ["287", "핑크레이디", "2877"],
-  ["299", "나니가스키", "2999"],
-  ["300", "한마디", "3000"],
-  ["302", "PinkHoodie", "3002"],
-  ["303", "IceCream", "3003"],
-  ["306", "100개", "3064"],
-  ["311", "Door", "3113"],
-  ["323", "이쁜여자", "3232"],
-  ["324", "너와의모든지금", "3242"],
-  ["328", "간바레", "1919"],
-  ["332", "바니바니", "3322"],
-  ["345", "LSD", "3456"],
-  ["374", "LikeJennie", "3742"],
-  ["383", "헨타이", "3838"],
-  ["387", "누나가 알려줄게", "3874"],
-  ["389", "EDM", "3892"],
-  ["434", "살아있네", "4343"],
-  ["442", "둥따다", "4424"],
-  ["447", "스텝HLP", "4476"],
-  ["477", "사기캐", "4777"],
-  ["473", "전략적후퇴", "4732"],
-  ["500", "호미들", "5000"],
-  ["503", "호영레이블UP", "5050"],
-  ["504", "오션씨포니", "5042"],
-  ["505", "포메", "5052"],
-  ["509", "허당박", "5009"],
-  ["510", "주차", "5100"],
-  ["519", "굿몽", "5195"],
-  ["529", "광대", "5290"],
-  ["550", "바닥드라군", "4242"],
-  ["554", "TooBad", "5544"],
-  ["555", "패스트카", "5555"],
-  ["557", "또치", "5557"],
-  ["577", "경경경", "5777"],
-  ["578", "나무늘봉순", "5785"],
-  ["586", "참숫", "5866"],
-  ["588", "오빠하앙", "5882"],
-  ["589", "애벌레", "5869"],
-  ["599", "주녁깅", "5998"],
-  ["697", "흐름유지", "6974"],
-  ["709", "철민", "7009"],
-  ["712", "와e다", "7123"],
-  ["727", "SkiSki", "7272"],
-  ["747", "더끼", "7474"],
-  ["777", "베네딕트", "7777"],
-  ["789", "꾸리형", "7892"],
-  ["797", "신세계", "7979"],
-  ["888", "피리", "8888"],
-  ["999", "약속해", "9999"],
-  ["1000", "개쳐발렸쥬", "10000"],
-  ["1001", "로드잭", "10001"],
-  ["1003", "쥬", "10003"],
-  ["1002", "봉다리#", "10002"],
-  ["1005", "NotLikeUs", "10005"],
-  ["1007", "풍치", ""],
-  ["1008", "시그", "10007"],
-  ["1009", "씨나인", "30000"],
-  ["1010", "슈가", "10101"],
-  ["1011", "어림없지^^", "10111"],
-  ["1012", "만로디", "10012"],
-  ["1014", "감나무", "10014"],
-  ["1018", "꿀밤족구", "10018"],
-  ["1019", "00년생", "10190"],
-  ["1020", "호구모오", "10020"],
-  ["1022", "족구졸려", "10222"],
-  ["1023", "무드에라", "10023"],
-  ["1024", "영원한편돌이", "10024"],
-  ["1025", "효진", "10025"],
-  ["1026", "안드루", "10026"],
-  ["1028", "ㅅ애리", "10028"],
-  ["1029", "딩섬", "10299"],
-  ["1030", "황태자", "10030"],
-  ["1033", "영삼", "10303"],
-  ["1034", "힘빠진토깽이", "10033"],
-  ["1035", "안녕아세오", "10035"],
-  ["1036", "삼겹구", "10369"],
-  ["1037", "다죽", "10379"],
-  ["1039", "천국가볼래", "10039"],
-  ["1040", "만개화", "10040"],
-  ["1041", "살의리랏다", "10412"],
-  ["1042", "라네트", "10442"],
-  ["1044", "무공해", "10440"],
-  ["1046", "네유", "10046"],
-  ["1047", "광우철구혜루", "10476"],
-  ["1048", "포람페", "10048"],
-  ["1050", "창귀", "10050"],
-  ["1051", "SOLANA", "10501"],
-  ["1052", "볼팀", "10052"],
-  ["1054", "방송볼거없Na", "10054"],
-  ["1055", "한량", "10055"],
-  ["1056", "RED", "10056"],
-  ["1057", "아기뭉멘", "10579"],
-  ["1058", "오베R", "10058"],
-  ["1059", "큰허당박", "10509"],
-  ["1060", "개물소유동", "10060"],
-  ["1062", "낭만뽀이", "10062"],
-  ["1064", "혜루아줌마", "10064"],
-  ["1065", "물개", "10065"],
-  ["1066", "v6_멜로디", "10066"],
-  ["1068", "뽕뿡뚱땅", "10068"],
-  ["1070", "초월", "10070"],
-  ["1071", "왕자지원", "10071"],
-  ["1072", "STX이철민", "10720"],
-  ["1073", "김복덩v", "10073"],
-  ["1074", "헤븐샷", "10074"],
-  ["1075", "바크콜브", "10075"],
-  ["1076", "커즈:D", "10076"],
-  ["1077", "캐쉬건", "10077"],
-  ["1078", "빵맨", "10078"],
-  ["1079", "터미널", "10079"],
-  ["1080", "호구야매", "10080"],
-  ["1081", "에에디", "10081"],
-  ["1082", "키다리아저씨", "10082"],
-  ["1084", "배틀탄마린", "10084"],
-  ["1087", "플진", "10087"],
-  ["1088", "v8_멜로디", "10088"],
-  ["1089", "미니빵꾸", "10089"],
-  ["1090", "드러오는문", "10090"],
-  ["1094", "종로왕김두한", "10094"],
-  ["1095", "시간을구독중", "10095"],
-  ["1097", "큰코인러형규", "10097"],
-  ["1099", "람보르기니", "10099"],
-  ["1100", "은유화1", "11001"],
-  ["1101", "강남일개미", "11011"],
-  ["1103", "뮤니란곰", ""],
-  ["1104", "love1004", "10104"],
-  ["1107", "징징쓰v", "11077"],
-  ["1109", "강포커", "10109"],
-  ["1110", "LARK10", "10110"],
-  ["1111", "라페라리", "11111"],
-  ["1112", "야부리맨", "11112"],
-  ["1117", "Spurs7", "11117"],
-  ["1118", "집중", "10118"],
-  ["1119", "JUNU", "10119"],
-  ["1122", "남순커플", "11220"],
-  ["1125", "한여름밤의꿈", "10125"],
-  ["1126", "단풍이든다", "10126"],
-  ["1124", "퀘이샤", "10724"],
-  ["1128", "원픽", "11280"],
-  ["1133", "산멘", "11333"],
-  ["1139", "호랑수월가", "10390"],
-  ["1142", "부비", "10042"],
-  ["1147", "Unplug", "11476"],
-  ["1151", "시그니엘스", "11511"],
-  ["1154", "없네", "10154"],
-  ["1155", "아로케", "10555"],
-  ["1157", "모던닉", "11579"],
-  ["1164", "라페스타", "11164"],
-  ["1170", "오늘만산다", "10170"],
-  ["1172", "충충충", "10772"],
-  ["1177", "폼피츠", "10770"],
-  ["1182", "코비커리", "10824"],
-  ["1188", "C9임", "11888"],
-  ["1190", "바비걸", "10909"],
-  ["1197", "GUCCI", "11197"],
-  ["1199", "인생뭐있어", "10999"],
-  ["1200", "COOL쿨쿨", "10200"],
-  ["1211", "SexyQueen", "12111"],
-  ["1212", "Lacrimosa", "12121"],
-  ["1222", "마티니", "12222"],
-  ["1225", "박우신2", "12225"],
-  ["1228", "카리#", "10228"],
-  ["1234", "Queens", "12345"],
-  ["1242", "스타워킨", "12424"],
-  ["1246", "왜유화", "12468"],
-  ["1252", "v12_멜로디", "12520"],
-  ["1258", "앙드로", "10258"],
-  ["1262", "많이사랑해뮤니야", "12462"],
-  ["1275", "띠멘", "12752"],
-  ["1308", "쫄병", "13088"],
-  ["1313", "파라노이드", "13131"],
-  ["1357", "썸머G", "10357"],
-  ["1400", "식이", "14140"],
-  ["1444", "세비지", "14444"],
-  ["1515", "짭승환", "15151"],
-  ["1551", "초코핑", "15551"],
-  ["1521", "오승환이다", "10521"],
-  ["1567", "오렌지신정원", "10567"],
-  ["1587", "싸대기떄리자", "15874"],
-  ["1666", "Heart", "10666"],
-  ["1676", "피카츄69", "16767"],
-  ["1696", "골타69", "16969"],
-  ["1697", "촌캉스", "16974"],
-  ["1782", "돈기브업", "10782"],
-  ["1785", "아기푸멘", "10785"],
-  ["1887", "광팔88", "10888"],
-  ["1888", "작은예멘", "18888"],
-  ["1892", "좀비", "10892"],
-  ["1999", "조로", "19999"],
-  ["2000", "핸드클랩", "20000"],
-  ["2009", "약속해리믹스", "20009"],
-  ["2020", "큰호구모오", "20020"],
-  ["2024", "큰영원한편돌이", "20024"],
-  ["2025", "큰오승환", "20252"],
-  ["2030", "킹황태자", "20030"],
-  ["2042", "큰라네트", "20442"],
-  ["2050", "쑥대머리", "20050"],
-  ["2057", "뭉크뭉", "20579"],
-  ["2069", "도파민69", "20069"],
-  ["2078", "아쿠아푸멘", "20785"],
-  ["2109", "킹포커", "20109"],
-  ["2111", "겨울왕국", "21111"],
-  ["2112", "슈퍼야부리맨", "21112"],
-  ["2152", "BIG v12_멜로디", "21252"],
-  ["2258", "큰앙드로", "20258"],
-  ["2357", "캡틴썸머G", "20357"],
-  ["2444", "큰세비지", "24444"],
-  ["2486", "v12_로맨스", "29486"],
-  ["2587", "큰싸대기떄리자", "25874"],
-  ["2676", "큰피카츄69", "26767"],
-  ["2696", "큰골타69", "26969"],
-  ["2697", "큰촌캉스", "26974"],
-  ["2888", "티미시아나", "28888"],
-  ["2892", "892소닉", "20892"],
-  ["2911", "LAFESTAR", "29111"],
-  ["2957", "슈퍼뭉크뭉", "29579"],
-  ["2989", "대쫄병", "29898"],
-  ["2999", "큰예멘", "29999"],
-  ["3069", "69어쎔블", "30069"],
-  ["5252", "십만로디", "100052"],
-  ["10520", "큰소닉", ""]
+    // 여기에 실제 데이터를 주입하세요. (예시)
+    const DATA = [
+      // { bp: 1111, title: "쁠리 신호탄", excel: 1 },
+      // { bp: 3082, title: "쁠리 응원가", excel: 3 },
     ];
 
-    function render(list) {
-      table.innerHTML = "";
-      for (const [num, title, excel] of list) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${num}</td><td>${title}</td><td>${excel}</td>`;
-        table.appendChild(tr);
+    const $tbody = document.getElementById('tbody');
+    const $count = document.getElementById('count');
+    const $q = document.getElementById('q');
+    const $sort = document.getElementById('sort');
+    const $reset = document.getElementById('reset');
+    const $empty = document.getElementById('empty');
+
+    function render(rows){
+      $tbody.innerHTML = '';
+      if(!rows.length){
+        $tbody.innerHTML = `<tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td><td data-h="엑셀개수">–</td></tr>`;
+        $count.textContent = '0';
+        $empty.style.display = 'block';
+        return;
       }
-      counter.textContent = `총 ${list.length}개의 시그가 검색되었습니다.`;
+      $empty.style.display = 'none';
+      $count.textContent = rows.length.toString();
+      rows.forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td data-h="별풍개수"><span class="badge">${r.bp}</span></td>
+          <td data-h="제목">${r.title}</td>
+          <td data-h="엑셀개수">${r.excel ?? '–'}</td>
+        `;
+        $tbody.appendChild(tr);
+      });
     }
 
-    input.addEventListener("input", () => {
-      const kw = input.value.trim().toLowerCase();
-      const filtered = data.filter(([num, title, excel]) =>
-        num.includes(kw) || title.toLowerCase().includes(kw) || excel.includes(kw)
-      );
-      render(filtered);
+    function apply(){
+      const term = $q.value.trim().toLowerCase();
+      let rows = DATA.filter(r=>{
+        return (
+          r.title.toLowerCase().includes(term) ||
+          String(r.bp).includes(term) ||
+          String(r.excel ?? '').includes(term)
+        );
+      });
+      switch($sort.value){
+        case 'bp-asc': rows.sort((a,b)=>a.bp-b.bp); break;
+        case 'bp-desc': rows.sort((a,b)=>b.bp-a.bp); break;
+        case 'title-asc': rows.sort((a,b)=>a.title.localeCompare(b.title)); break;
+        case 'title-desc': rows.sort((a,b)=>b.title.localeCompare(a.title)); break;
+      }
+      render(rows);
+    }
+
+    $q.addEventListener('input', apply);
+    $sort.addEventListener('change', apply);
+    $reset.addEventListener('click', ()=>{
+      $q.value=''; $sort.value='bp-asc'; apply();
     });
 
-    render(data);
+    // 초기 렌더
+    render(DATA);
   </script>
 </body>
 </html>
