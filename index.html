@@ -11,15 +11,35 @@
       --shadow:0 10px 30px rgba(255,128,171,.18);
     }
     *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#fff7fb 0%, #fff 70%);color:var(--text);
-      font:16px/1.55 "Pretendard","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    /* 레이아웃: 중앙 700px + 우측 사이드 300px */
-    .wrap{max-width:1250px; margin:36px auto 48px; padding:0 18px}
-    .layout{display:grid; grid-template-columns: minmax(0,700px) 300px; gap:26px; align-items:start}
-    /* 1024px 이하에서는 1열로, 사이드 숨김 */
-    @media (max-width:1024px){ .layout{grid-template-columns:1fr} .sidebar{display:none} }
+    body{
+      margin:0;
+      background:linear-gradient(180deg,#fff7fb 0%, #fff 70%);
+      color:var(--text);
+      font:16px/1.55 "Pretendard","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial
+    }
 
-    /* 공용 카드 */
+    /* 바깥 래퍼 */
+    .wrap{max-width:1250px; margin:36px auto 48px; padding:0 18px}
+
+    /* ✅ 레이아웃: [좌 여백] [메인(700px)] [사이드(300px)] [우 여백] */
+    .layout{
+      display:grid;
+      grid-template-columns: 1fr 700px 300px 1fr;
+      column-gap:26px;
+      align-items:start;
+    }
+    /* 메인은 가운데(2열), 사이드는 오른쪽(3열) */
+    .main{ grid-column:2; }
+    .sidebar{ grid-column:3; position:sticky; top:24px; }
+
+    /* 1024px 이하에서는 1열, 사이드 숨김 */
+    @media (max-width:1024px){
+      .layout{ grid-template-columns:1fr; }
+      .main{ grid-column:auto; }
+      .sidebar{ display:none; }
+    }
+
+    /* 카드 공통 */
     .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
     .narrow{max-width:700px; margin:0 auto}
 
@@ -66,8 +86,7 @@
     table th:first-child, table td:first-child { width:120px }
     footer{margin-top:12px;color:var(--muted);font-size:12px;text-align:right}
 
-    /* 사이드바 */
-    .sidebar{position:sticky; top:24px}
+    /* 사이드(제목/리스트) */
     .side-title{display:flex;align-items:center;gap:8px;margin:0 0 8px 0;font-weight:800}
     .side-title .dot{width:8px;height:8px}
     .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,128,171,.12);border:1px solid rgba(255,128,171,.28);
@@ -75,7 +94,6 @@
     .side-list{margin:10px 0 0 0;padding:0;list-style:none}
     .side-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff;margin-bottom:8px}
     .side-item .num{min-width:58px;text-align:center}
-    .side-section + .side-section{margin-top:16px}
 
     /* 모바일 */
     @media (max-width:640px){
@@ -93,7 +111,7 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- 상단 프로필: 폭 좁게 복구 -->
+    <!-- 프로필: 중앙 좁은 폭 유지 -->
     <section class="card profile narrow" style="margin-bottom:16px">
       <div class="avatar"><img id="avatar" alt="Profile" /></div>
       <div>
@@ -112,10 +130,10 @@
       </div>
     </section>
 
-    <!-- 메인 2열 -->
+    <!-- 메인(가운데) + 사이드(오른쪽) -->
     <div class="layout">
       <!-- 가운데: 시그 리스트 -->
-      <div class="card">
+      <div class="card main">
         <div class="toolbar">
           <input id="q" type="search" placeholder="검색: 제목 / 숫자…" aria-label="검색" />
           <select id="sort" aria-label="정렬">
@@ -132,9 +150,9 @@
           <thead>
             <tr><th>별풍개수</th><th>제목</th></tr>
           </thead>
-        <tbody id="tbody">
-          <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td></tr>
-        </tbody>
+          <tbody id="tbody">
+            <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td></tr>
+          </tbody>
         </table>
 
         <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
@@ -162,14 +180,14 @@
     const IMG_SRC = "assets/profile.jpg"; // 루트면 "profile.jpg"
     document.getElementById('avatar').src = IMG_SRC;
 
-    /* 메인 리스트 데이터 */
+    /* 메인 리스트 데이터(예시) */
     const DATA = [
       { bp: 1111, title: "쁠리 신호탄" },
       { bp: 3082, title: "쁠리 응원가" },
       { bp: 5782, title: "오직 쁠리" }
     ];
 
-    /* 사이드바 데이터 */
+    /* 사이드바 데이터: 필요하면 네가 넣은 배열로 교체 */
     const SPECIAL = {
       personal: [
         { bp: 1682, title: "개인방송 시그 — 역팬" },
