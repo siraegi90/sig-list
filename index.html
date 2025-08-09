@@ -3,74 +3,103 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>쁠리's 시그 리스트</title>
-  <!-- 시스템 폰트 스택으로 가볍게 -->
+  <title>쁠리’s 시그 리스트</title>
   <style>
     :root{
-      --accent:#ff80ab; /* 사용자 포인트 컬러 */
-      --bg:#0b0d16;
-      --card:#121528;
-      --text:#e9ecf1;
-      --muted:#9aa3b2;
-      --border:#23283f;
-      --radius:16px;
-      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --accent:#ff80ab;
+      --bg:#fff7fb;
+      --card:#ffffff;
+      --text:#2a2a2a;
+      --muted:#7b8494;
+      --border:#f0e3ee;
+      --radius:18px;
+      --shadow:0 10px 30px rgba(255,128,171,.18);
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
-      margin:0; background:linear-gradient(180deg,#0a0c14 0%, #0e1230 100%);
-      color:var(--text); font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      letter-spacing:.1px;
+      margin:0;
+      background:linear-gradient(180deg,#fff7fb 0%, #fff 70%);
+      color:var(--text);
+      font:16px/1.55 "Pretendard","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
     }
-    .wrap{max-width:1000px; margin:40px auto; padding:0 18px}
-    header{
-      display:flex; align-items:center; gap:14px; margin-bottom:18px;
+    .wrap{max-width:1000px; margin:36px auto 48px; padding:0 18px}
+
+    /* 프로필 카드 */
+    .profile{
+      display:grid; grid-template-columns:88px 1fr; gap:14px;
+      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+      padding:16px; box-shadow:var(--shadow); margin-bottom:16px;
     }
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 20px var(--accent)}
-    h1{margin:0; font-size:22px; font-weight:700}
-    .sub{color:var(--muted); font-size:13px}
+    .avatar{
+      width:88px; height:88px; border-radius:50%; overflow:hidden;
+      border:3px solid rgba(255,128,171,.35);
+      box-shadow:0 8px 20px rgba(255,128,171,.25);
+    }
+    .avatar img{width:100%; height:100%; object-fit:cover}
+    .p-head{display:flex; align-items:center; gap:10px; margin:2px 0 6px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--accent)}
+    h1{margin:0; font-size:22px; font-weight:800}
+    .p-sub{color:var(--muted); font-size:13px}
+
+    /* 링크 버튼 */
+    .links{margin-top:8px; display:flex; gap:8px; flex-wrap:wrap}
+    .link-btn{
+      display:inline-flex; align-items:center; gap:6px;
+      background:var(--accent); color:#fff; font-size:13px; font-weight:600;
+      padding:6px 10px; border-radius:999px; text-decoration:none;
+      box-shadow:0 4px 10px rgba(255,128,171,.35);
+      transition:transform .15s;
+    }
+    .link-btn:hover{transform:translateY(-1px)}
+    .link-btn svg{width:14px; height:14px}
+
+    /* 카드 공통 */
     .card{
       background:var(--card); border:1px solid var(--border);
       border-radius:var(--radius); box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
     }
-    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px}
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px}
     input[type="search"], select{
-      background:#0f1330; color:var(--text);
+      background:#fff; color:var(--text);
       border:1px solid var(--border); border-radius:12px;
       padding:10px 12px; outline:none; width:260px; max-width:100%;
     }
     .chip{
       display:inline-flex; align-items:center; gap:6px;
       padding:8px 10px; border:1px solid var(--border); border-radius:999px;
-      font-size:13px; color:var(--muted);
+      font-size:13px; color:var(--muted); background:#fff;
     }
     .chip b{color:var(--text)}
     .btn{
-      background:var(--accent); color:#111; font-weight:700;
+      background:var(--accent); color:#fff; font-weight:700;
       border:none; border-radius:12px; padding:10px 14px; cursor:pointer;
+      box-shadow:0 6px 12px rgba(255,128,171,.35);
     }
     .btn:active{transform:translateY(1px)}
+
     table{
       width:100%; border-collapse:separate; border-spacing:0;
-      overflow:hidden; border-radius:12px; border:1px solid var(--border);
-      background:#0f1330;
+      overflow:hidden; border-radius:14px; border:1px solid var(--border);
+      background:#fff;
     }
     thead th{
-      text-align:left; font-size:13px; color:var(--muted);
+      text-align:left; font-size:13px; color:#8b93a3;
       padding:12px; border-bottom:1px solid var(--border);
-      backdrop-filter:saturate(120%);
+      background:linear-gradient(#fff,#fff5fb);
     }
-    tbody td{padding:12px; border-top:1px solid rgba(255,255,255,.04)}
-    tbody tr:hover{background:rgba(255,255,255,.03)}
+    tbody td{padding:12px; border-top:1px solid #f7eef4}
+    tbody tr:hover{background:#fff6fb}
     .badge{
-      display:inline-block; padding:4px 8px; border-radius:999px;
-      background:rgba(255,128,171,.15); color:#ffc6da; font-size:12px; font-weight:700;
+      display:inline-block; padding:6px 10px; border-radius:999px;
+      background:rgba(255,128,171,.14); color:#d83d82; font-size:12px; font-weight:800;
+      border:1px solid rgba(255,128,171,.32)
     }
-    footer{margin-top:14px; color:var(--muted); font-size:12px; text-align:right}
-    /* 반응형 */
+    footer{margin-top:12px; color:var(--muted); font-size:12px; text-align:right}
+
     @media (max-width:640px){
+      .profile{grid-template-columns:64px 1fr}
+      .avatar{width:64px;height:64px}
       .toolbar{flex-direction:column; align-items:stretch}
       input[type="search"], select, .btn{width:100%}
       thead{display:none}
@@ -85,17 +114,36 @@
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <span class="dot"></span>
-      <div>
-        <h1>쁠리’s 시그 리스트</h1>
-        <div class="sub">별풍개수·제목·엑셀개수로 조회</div>
+    <!-- 프로필 카드 -->
+    <section class="profile">
+      <div class="avatar">
+        <img id="avatar" alt="Profile" />
       </div>
-    </header>
+      <div>
+        <div class="p-head">
+          <span class="dot"></span>
+          <h1>쁠리</h1>
+        </div>
+        <div class="p-sub">밝고 귀여운 무드의 방송 ✿ 시그 리스트를 쉽게 찾아보세요</div>
+        <div class="links">
+          <a class="link-btn" href="https://www.youtube.com/@todayisvvely" target="_blank">
+            <!-- YouTube 아이콘 -->
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a2.998 2.998 0 0 0-2.112-2.12C19.365 3.5 12 3.5 12 3.5s-7.365 0-9.386.566A2.998 2.998 0 0 0 .502 6.186C0 8.207 0 12 0 12s0 3.793.502 5.814a2.998 2.998 0 0 0 2.112 2.12C4.635 20.5 12 20.5 12 20.5s7.365 0 9.386-.566a2.998 2.998 0 0 0 2.112-2.12C24 15.793 24 12 24 12s0-3.793-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"/></svg>
+            YouTube
+          </a>
+          <a class="link-btn" href="https://www.instagram.com/lee2seol/" target="_blank">
+            <!-- Instagram 아이콘 -->
+            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm8.5 1.5a4.25 4.25 0 0 1 4.25 4.25v8.5a4.25 4.25 0 0 1-4.25 4.25h-8.5a4.25 4.25 0 0 1-4.25-4.25v-8.5a4.25 4.25 0 0 1 4.25-4.25h8.5zm-4.25 3a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5zm0 1.5a4.25 4.25 0 1 1 0 8.5 4.25 4.25 0 0 1 0-8.5zm5.25-.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25z"/></svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+    </section>
 
+    <!-- 검색/정렬 + 표 -->
     <div class="card">
       <div class="toolbar">
-        <input id="q" type="search" placeholder="검색: 제목 / 숫자 입력…" />
+        <input id="q" type="search" placeholder="검색: 제목 / 숫자…" />
         <select id="sort">
           <option value="bp-asc">별풍개수 ↑</option>
           <option value="bp-desc">별풍개수 ↓</option>
@@ -115,25 +163,24 @@
           </tr>
         </thead>
         <tbody id="tbody">
-          <!-- 데이터가 없을 때 안내 -->
           <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td><td data-h="엑셀개수">–</td></tr>
         </tbody>
       </table>
 
-      <footer id="empty">필요한 데이터를 올리면 자동으로 갱신됩니다.</footer>
+      <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
     </div>
   </div>
 
-  <!-- 가벼운 스크립트: 검색/정렬만 -->
   <script>
-    // 여기에 실제 데이터를 주입하세요. (예시)
+    /* 프로필 이미지 경로 */
+    const IMG_SRC = "assets/profile.jpg"; // 업로드 후 경로 맞춰주세요
+    document.getElementById('avatar').src = IMG_SRC;
+
+    /* 예시 데이터 */
     const DATA = [
-  { bp: 1111, title: "쁠리 신호탄", excel: 1 },
-  { bp: 3082, title: "쁠리 응원가", excel: 3 },
-  { bp: 5782, title: "오직 쁠리", excel: 2 }
-      
-      // { bp: 1111, title: "쁠리 신호탄", excel: 1 },
-      // { bp: 3082, title: "쁠리 응원가", excel: 3 },
+      { bp: 1111, title: "쁠리 신호탄", excel: 1 },
+      { bp: 3082, title: "쁠리 응원가", excel: 3 },
+      { bp: 5782, title: "오직 쁠리", excel: 2 }
     ];
 
     const $tbody = document.getElementById('tbody');
@@ -184,9 +231,7 @@
 
     $q.addEventListener('input', apply);
     $sort.addEventListener('change', apply);
-    $reset.addEventListener('click', ()=>{
-      $q.value=''; $sort.value='bp-asc'; apply();
-    });
+    $reset.addEventListener('click', ()=>{ $q.value=''; $sort.value='bp-asc'; apply(); });
 
     // 초기 렌더
     render(DATA);
