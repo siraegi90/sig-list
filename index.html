@@ -6,37 +6,29 @@
   <title>쁠리’s 시그 리스트</title>
   <style>
     :root{
-      --accent:#ff80ab;
-      --bg:#fff7fb;
-      --card:#ffffff;
-      --text:#2a2a2a;
-      --muted:#7b8494;
-      --border:#f0e3ee;
-      --radius:18px;
+      --accent:#ff80ab; --bg:#fff7fb; --card:#ffffff; --text:#2a2a2a;
+      --muted:#7b8494; --border:#f0e3ee; --radius:18px;
       --shadow:0 10px 30px rgba(255,128,171,.18);
     }
     *{box-sizing:border-box}
-    body{
-      margin:0; background:linear-gradient(180deg,#fff7fb 0%, #fff 70%);
-      color:var(--text);
-      font:16px/1.55 "Pretendard","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-    }
-    .wrap{max-width:1000px; margin:36px auto 48px; padding:0 18px}
+    body{margin:0;background:linear-gradient(180deg,#fff7fb 0%, #fff 70%);color:var(--text);
+      font:16px/1.55 "Pretendard","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    /* 레이아웃: 중앙 700px + 우측 사이드 300px */
+    .wrap{max-width:1250px; margin:36px auto 48px; padding:0 18px}
+    .layout{display:grid; grid-template-columns: minmax(0,700px) 300px; gap:26px; align-items:start}
+    /* 1024px 이하에서는 1열로, 사이드 숨김 */
+    @media (max-width:1024px){ .layout{grid-template-columns:1fr} .sidebar{display:none} }
 
-    /* 공용 좁은 폭 */
+    /* 공용 카드 */
+    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
     .narrow{max-width:700px; margin:0 auto}
 
     /* 프로필 카드 */
-    .profile{
-      display:grid; grid-template-columns:88px 1fr; gap:14px;
-      background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-      padding:16px; box-shadow:var(--shadow); position:relative; overflow:hidden;
-    }
+    .profile{display:grid; grid-template-columns:88px 1fr; gap:14px; position:relative; overflow:hidden}
     .profile:before{
-      content:""; position:absolute; inset:-1px; padding:1px;
-      border-radius:calc(var(--radius) + 1px);
-      background:linear-gradient(90deg, rgba(255,128,171,.45), rgba(255,255,255,0) 40%, rgba(255,128,171,.45));
-      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      content:""; position:absolute; inset:-1px; padding:1px; border-radius:calc(var(--radius)+1px);
+      background:linear-gradient(90deg,rgba(255,128,171,.45),rgba(255,255,255,0) 40%,rgba(255,128,171,.45));
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
       -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
     }
     .avatar{width:88px;height:88px;border-radius:50%;overflow:hidden;position:relative;isolation:isolate}
@@ -50,57 +42,41 @@
     h1{margin:0;font-size:22px;font-weight:800}
     .p-sub{color:var(--muted);font-size:13px}
     .links{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
-    .link-btn{
-      display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;
-      font-size:13px;font-weight:600;padding:6px 10px;border-radius:999px;text-decoration:none;
-      box-shadow:0 6px 14px rgba(255,128,171,.35);transition:transform .15s,box-shadow .15s,filter .15s}
+    .link-btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;
+      padding:6px 10px;border-radius:999px;text-decoration:none;box-shadow:0 6px 14px rgba(255,128,171,.35);transition:.15s}
     .link-btn:hover{transform:translateY(-1px);box-shadow:0 10px 18px rgba(255,128,171,.45);filter:saturate(1.2)}
     .link-btn svg{width:14px;height:14px}
 
-    /* 리스트 카드 */
-    .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
-
-    /* 툴바: 정렬 및 크기 최적화 */
-    .toolbar{
-      display:grid; grid-template-columns: 1fr 160px 88px auto; /* 검색창 | 분류창 | 초기화 | 총갯수 */
-      gap:10px; align-items:center; margin-bottom:12px;
-    }
-    input[type="search"]{
-      background:#fff;color:var(--text);border:1px solid var(--border);border-radius:12px;
-      padding:10px 12px; outline:none; width:100%;
-    }
-    select{
-      background:#fff;color:var(--text);border:1px solid var(--border);border-radius:12px;
-      padding:10px 28px 10px 12px; outline:none; width:100%; font-size:14px;
-    }
-    .btn{
-      background:var(--accent);color:#fff;font-weight:700;border:none;border-radius:12px;
-      padding:10px 12px;cursor:pointer; width:88px; text-align:center;
-    }
-    .chip{
-      justify-self:end;
-      display:inline-flex; align-items:center; gap:6px;
-      padding:8px 10px; border:1px solid var(--border); border-radius:999px;
-      font-size:13px; color:var(--muted); background:#fff;
-    }
+    /* 툴바(검색 / 분류 / 초기화 / 총개수) */
+    .toolbar{display:grid;grid-template-columns:1fr 160px 88px auto;gap:10px;align-items:center;margin-bottom:12px}
+    input[type="search"]{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 12px;outline:none;width:100%}
+    select{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 28px 10px 12px;outline:none;width:100%;font-size:14px}
+    .btn{background:var(--accent);color:#fff;font-weight:700;border:none;border-radius:12px;padding:10px 12px;cursor:pointer;width:88px;text-align:center}
+    .chip{justify-self:end;display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:999px;font-size:13px;color:var(--muted);background:#fff}
     .chip b{color:var(--text)}
 
     /* 표 */
     table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:14px;border:1px solid var(--border);background:#fff}
-    thead th{
-      text-align:left;font-size:13px;color:#8b93a3;padding:12px;border-bottom:1px solid var(--border);
-      background:linear-gradient(#fff,#fff5fb);position:sticky;top:0;z-index:1;
-    }
+    thead th{text-align:left;font-size:13px;color:#8b93a3;padding:12px;border-bottom:1px solid var(--border);background:linear-gradient(#fff,#fff5fb);position:sticky;top:0;z-index:1}
     tbody td{padding:12px;border-top:1px solid #f7eef4}
     tbody tr{position:relative;transition:background .15s, transform .06s}
     tbody tr:hover{background:#fff6fb;transform:translateY(-1px)}
     tbody tr:hover td:first-child:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
-    .badge{
-      display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,128,171,.14);
-      color:#d83d82;font-size:12px;font-weight:800;border:1px solid rgba(255,128,171,.32)
-    }
-    footer{margin-top:12px;color:var(--muted);font-size:12px;text-align:right}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,128,171,.14);color:#d83d82;font-size:12px;font-weight:800;border:1px solid rgba(255,128,171,.32)}
     table th:first-child, table td:first-child { width:120px }
+    footer{margin-top:12px;color:var(--muted);font-size:12px;text-align:right}
+
+    /* 사이드바(특별 시그) */
+    .sidebar{position:sticky; top:24px}
+    .side-title{display:flex;align-items:center;gap:8px;margin:0 0 8px 0;font-weight:800}
+    .side-title .dot{width:8px;height:8px}
+    .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,128,171,.12);border:1px solid rgba(255,128,171,.28);
+      color:#d83d82;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:700}
+    .side-list{margin:10px 0 0 0;padding:0;list-style:none}
+    .side-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff;margin-bottom:8px}
+    .side-item .num{min-width:58px;text-align:center}
+    .side-section + .side-section{margin-top:16px}
+    .side-note{margin-top:10px;color:var(--muted);font-size:12px}
 
     /* 모바일 */
     @media (max-width:640px){
@@ -108,7 +84,6 @@
       .avatar{width:64px;height:64px}
       .toolbar{grid-template-columns:1fr; gap:8px}
       select, .btn, .chip{width:100%}
-      .chip{justify-self:stretch; justify-content:center}
       thead{display:none}
       table, tbody, tr, td{display:block;width:100%}
       tbody tr{border-bottom:1px solid var(--border);padding:10px 8px}
@@ -119,8 +94,8 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- 프로필 -->
-    <section class="profile narrow" style="margin-bottom:16px">
+    <!-- 상단 프로필 -->
+    <section class="card profile" style="margin-bottom:16px">
       <div class="avatar"><img id="avatar" alt="Profile" /></div>
       <div>
         <div class="p-head"><span class="dot"></span><h1>쁠리</h1></div>
@@ -138,46 +113,82 @@
       </div>
     </section>
 
-    <!-- 시그 리스트 -->
-    <div class="card narrow">
-      <div class="toolbar">
-        <input id="q" type="search" placeholder="검색: 제목 / 숫자…" aria-label="검색" />
-        <select id="sort" aria-label="정렬">
-          <option value="bp-asc">별풍개수 ↑</option>
-          <option value="bp-desc">별풍개수 ↓</option>
-          <option value="title-asc">제목 A–Z</option>
-          <option value="title-desc">제목 Z–A</option>
-        </select>
-        <button class="btn" id="reset">초기화</button>
-        <span class="chip">총 <b id="count">0</b>개의 시그</span>
-      </div>
+    <!-- 메인 2열 -->
+    <div class="layout">
+      <!-- 가운데: 시그 리스트 -->
+      <div class="card">
+        <div class="toolbar">
+          <input id="q" type="search" placeholder="검색: 제목 / 숫자…" aria-label="검색" />
+          <select id="sort" aria-label="정렬">
+            <option value="bp-asc">별풍개수 ↑</option>
+            <option value="bp-desc">별풍개수 ↓</option>
+            <option value="title-asc">제목 A–Z</option>
+            <option value="title-desc">제목 Z–A</option>
+          </select>
+          <button class="btn" id="reset">초기화</button>
+          <span class="chip">총 <b id="count">0</b>개의 시그</span>
+        </div>
 
-      <table id="tbl">
-        <thead>
-          <tr>
-            <th>별풍개수</th>
-            <th>제목</th>
-          </tr>
-        </thead>
+        <table id="tbl">
+          <thead>
+            <tr><th>별풍개수</th><th>제목</th></tr>
+          </thead>
         <tbody id="tbody">
           <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td></tr>
         </tbody>
-      </table>
+        </table>
 
-      <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
+        <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
+      </div>
+
+      <!-- 오른쪽: 특별 시그 사이드바 (sticky) -->
+      <aside class="sidebar">
+        <div class="card side-section">
+          <h3 class="side-title"><span class="dot"></span>특별 시그</h3>
+          <span class="pill">개인방송 시그</span>
+          <ul class="side-list" id="side-personal">
+            <!-- JS로 채움 -->
+          </ul>
+          <div class="side-note">방송 중 자주 쓰는 개인용 시그</div>
+        </div>
+
+        <div class="card side-section">
+          <h3 class="side-title"><span class="dot"></span>열혈 팬 시그</h3>
+          <span class="pill">열혈 TOP</span>
+          <ul class="side-list" id="side-fans">
+            <!-- JS로 채움 -->
+          </ul>
+          <div class="side-note">열혈 등급/특전 관련 시그</div>
+        </div>
+      </aside>
     </div>
   </div>
 
   <script>
-    const IMG_SRC = "assets/profile.jpg"; // 필요 시 "profile.jpg"
+    /* 프로필 이미지 경로 */
+    const IMG_SRC = "assets/profile.jpg"; // 루트면 "profile.jpg"
     document.getElementById('avatar').src = IMG_SRC;
 
+    /* 메인 리스트 데이터 */
     const DATA = [
       { bp: 1111, title: "쁠리 신호탄" },
       { bp: 3082, title: "쁠리 응원가" },
       { bp: 5782, title: "오직 쁠리" }
     ];
 
+    /* 사이드바 데이터 */
+    const SPECIAL = {
+      personal: [
+        { bp: 1682, title: "개인방송 시그 — 역팬" },
+        { bp: 3082, title: "한방방셀" },
+      ],
+      fans: [
+        { bp: 5782, title: "엽기방셀 + 역팬" },
+        { bp: 18882, title: "열혈 전용 — 스페셜" },
+      ]
+    };
+
+    /* 메인 렌더 */
     const $tbody = document.getElementById('tbody');
     const $count = document.getElementById('count');
     const $q = document.getElementById('q');
@@ -203,20 +214,14 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td data-h="별풍개수"><span class="badge">${r.bp}</span></td>
-          <td data-h="제목">${r.title}</td>
-        `;
+          <td data-h="제목">${r.title}</td>`;
         $tbody.appendChild(tr);
       });
     }
 
     function apply(){
       const term = $q.value.trim().toLowerCase();
-      let rows = DATA.filter(r=>{
-        return (
-          r.title.toLowerCase().includes(term) ||
-          String(r.bp).includes(term)
-        );
-      });
+      let rows = DATA.filter(r=> r.title.toLowerCase().includes(term) || String(r.bp).includes(term));
       switch($sort.value){
         case 'bp-asc': rows.sort((a,b)=>a.bp-b.bp); break;
         case 'bp-desc': rows.sort((a,b)=>b.bp-a.bp); break;
@@ -225,12 +230,26 @@
       }
       render(rows);
     }
-
     $q.addEventListener('input', apply);
     $sort.addEventListener('change', apply);
     $reset.addEventListener('click', ()=>{ $q.value=''; $sort.value='bp-asc'; apply(); });
 
+    /* 사이드 렌더 */
+    function renderSide(list, elId){
+      const el = document.getElementById(elId);
+      el.innerHTML = '';
+      list.forEach(r=>{
+        const li = document.createElement('li');
+        li.className = 'side-item';
+        li.innerHTML = `<span class="badge num">${r.bp}</span><span>${r.title}</span>`;
+        el.appendChild(li);
+      });
+    }
+
+    // 초기 렌더
     render(DATA);
+    renderSide(SPECIAL.personal, 'side-personal');
+    renderSide(SPECIAL.fans, 'side-fans');
   </script>
 </body>
 </html>
