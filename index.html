@@ -25,18 +25,41 @@
     }
     .wrap{max-width:1000px; margin:36px auto 48px; padding:0 18px}
 
+    /* 공용 카드 폭(프로필+리스트 동일) */
+    .narrow {
+      max-width:700px;
+      margin:0 auto;
+    }
+
     /* 프로필 카드 */
     .profile{
       display:grid; grid-template-columns:88px 1fr; gap:14px;
       background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-      padding:16px; box-shadow:var(--shadow); margin-bottom:16px;
+      padding:16px; box-shadow:var(--shadow);
+      position:relative; overflow:hidden;
+    }
+    /* 프로필 카드 그라데이션 보더 효과 */
+    .profile:before{
+      content:""; position:absolute; inset:-1px;
+      padding:1px; border-radius:calc(var(--radius) + 1px);
+      background:linear-gradient(90deg, rgba(255,128,171,.45), rgba(255,255,255,0) 40%, rgba(255,128,171,.45));
+      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor; mask-composite:exclude;
+      pointer-events:none;
     }
     .avatar{
       width:88px; height:88px; border-radius:50%; overflow:hidden;
-      border:3px solid rgba(255,128,171,.35);
-      box-shadow:0 8px 20px rgba(255,128,171,.25);
+      position:relative; isolation:isolate;
     }
-    .avatar img{width:100%; height:100%; object-fit:cover}
+    /* 아바타 반짝 링 */
+    .avatar:before{
+      content:""; position:absolute; inset:-3px; border-radius:50%;
+      background:
+        conic-gradient(from 0deg, rgba(255,128,171,.8), rgba(255,128,171,0) 40%, rgba(255,128,171,.8));
+      filter:blur(4px); z-index:-1; animation:spin 6s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .avatar img{width:100%; height:100%; object-fit:cover; border-radius:50%}
     .p-head{display:flex; align-items:center; gap:10px; margin:2px 0 6px}
     .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--accent)}
     h1{margin:0; font-size:22px; font-weight:800}
@@ -48,19 +71,21 @@
       display:inline-flex; align-items:center; gap:6px;
       background:var(--accent); color:#fff; font-size:13px; font-weight:600;
       padding:6px 10px; border-radius:999px; text-decoration:none;
-      box-shadow:0 4px 10px rgba(255,128,171,.35);
-      transition:transform .15s;
+      box-shadow:0 6px 14px rgba(255,128,171,.35);
+      transition:transform .15s, box-shadow .15s, filter .15s;
     }
-    .link-btn:hover{transform:translateY(-1px)}
+    .link-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 10px 18px rgba(255,128,171,.45);
+      filter:saturate(1.2);
+    }
     .link-btn svg{width:14px; height:14px}
 
-    /* 카드/컨트롤 */
+    /* 리스트 카드 */
     .card{
       background:var(--card); border:1px solid var(--border);
       border-radius:var(--radius); box-shadow:var(--shadow);
       padding:16px;
-      max-width:700px; /* 폭 줄임 */
-      margin:0 auto;   /* 가운데 정렬 */
     }
     .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px}
     input[type="search"], select{
@@ -77,7 +102,6 @@
     .btn{
       background:var(--accent); color:#fff; font-weight:700;
       border:none; border-radius:12px; padding:10px 14px; cursor:pointer;
-      box-shadow:0 6px 12px rgba(255,128,171,.35);
     }
     .btn:active{transform:translateY(1px)}
 
@@ -91,9 +115,20 @@
       text-align:left; font-size:13px; color:#8b93a3;
       padding:12px; border-bottom:1px solid var(--border);
       background:linear-gradient(#fff,#fff5fb);
+      position:sticky; top:0; z-index:1; /* 스크롤 시 헤더 고정 */
     }
     tbody td{padding:12px; border-top:1px solid #f7eef4}
-    tbody tr:hover{background:#fff6fb}
+    /* 행 호버: 좌측 포인트 바 + 살짝 들어올림 */
+    tbody tr{
+      position:relative; transition:background .15s, transform .06s;
+    }
+    tbody tr:hover{
+      background:#fff6fb; transform:translateY(-1px);
+    }
+    tbody tr:hover td:first-child:before{
+      content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
+      background:var(--accent);
+    }
     .badge{
       display:inline-block; padding:6px 10px; border-radius:999px;
       background:rgba(255,128,171,.14); color:#d83d82; font-size:12px; font-weight:800;
@@ -103,9 +138,7 @@
 
     /* 별풍개수 칼럼 폭 */
     table th:first-child,
-    table td:first-child {
-      width:120px;
-    }
+    table td:first-child { width:120px; }
 
     /* 반응형 */
     @media (max-width:640px){
@@ -125,8 +158,8 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- 프로필 카드 -->
-    <section class="profile">
+    <!-- 프로필 카드 (폭 맞춤) -->
+    <section class="profile narrow" style="margin-bottom:16px">
       <div class="avatar">
         <img id="avatar" alt="Profile" />
       </div>
@@ -149,9 +182,10 @@
       </div>
     </section>
 
-    <!-- 검색/정렬 + 표 -->
-    <div class="card">
+    <!-- 검색/정렬 + 표 (폭 맞춤) -->
+    <div class="card narrow">
       <div class="toolbar">
+        <button class="btn" id="reset">초기화</button>
         <input id="q" type="search" placeholder="검색: 제목 / 숫자…" />
         <select id="sort">
           <option value="bp-asc">별풍개수 ↑</option>
@@ -160,13 +194,12 @@
           <option value="title-desc">제목 Z–A</option>
         </select>
         <span class="chip">총 <b id="count">0</b>개의 시그</span>
-        <button class="btn" id="reset">초기화</button>
       </div>
 
       <table id="tbl">
         <thead>
           <tr>
-            <th style="width:140px">별풍개수</th>
+            <th>별풍개수</th>
             <th>제목</th>
           </tr>
         </thead>
@@ -180,9 +213,11 @@
   </div>
 
   <script>
-    const IMG_SRC = "assets/profile.jpg"; // 이미지 경로
+    /* 프로필 이미지 경로 */
+    const IMG_SRC = "assets/profile.jpg"; // 루트면 "profile.jpg"로 변경
     document.getElementById('avatar').src = IMG_SRC;
 
+    /* 데이터 */
     const DATA = [
       { bp: 1111, title: "쁠리 신호탄" },
       { bp: 3082, title: "쁠리 응원가" },
@@ -241,6 +276,7 @@
     $sort.addEventListener('change', apply);
     $reset.addEventListener('click', ()=>{ $q.value=''; $sort.value='bp-asc'; apply(); });
 
+    // 초기 렌더
     render(DATA);
   </script>
 </body>
