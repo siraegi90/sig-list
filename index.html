@@ -59,6 +59,8 @@
       background:var(--card); border:1px solid var(--border);
       border-radius:var(--radius); box-shadow:var(--shadow);
       padding:16px;
+      max-width:700px; /* 폭 줄임 */
+      margin:0 auto;   /* 가운데 정렬 */
     }
     .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px}
     input[type="search"], select{
@@ -98,6 +100,12 @@
       border:1px solid rgba(255,128,171,.32)
     }
     footer{margin-top:12px; color:var(--muted); font-size:12px; text-align:right}
+
+    /* 별풍개수 칼럼 폭 */
+    table th:first-child,
+    table td:first-child {
+      width:120px;
+    }
 
     /* 반응형 */
     @media (max-width:640px){
@@ -172,11 +180,9 @@
   </div>
 
   <script>
-    /* 프로필 이미지 경로: assets/profile.jpg 또는 루트의 profile.jpg */
-    const IMG_SRC = "assets/profile.jpg"; // 루트에 뒀다면 "profile.jpg"로 바꿔주세요.
+    const IMG_SRC = "assets/profile.jpg"; // 이미지 경로
     document.getElementById('avatar').src = IMG_SRC;
 
-    /* 예시 데이터 (엑셀개수 제거) */
     const DATA = [
       { bp: 1111, title: "쁠리 신호탄" },
       { bp: 3082, title: "쁠리 응원가" },
@@ -235,7 +241,6 @@
     $sort.addEventListener('change', apply);
     $reset.addEventListener('click', ()=>{ $q.value=''; $sort.value='bp-asc'; apply(); });
 
-    // 초기 렌더
     render(DATA);
   </script>
 </body>
