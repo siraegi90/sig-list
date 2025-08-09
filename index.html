@@ -68,7 +68,7 @@
     .chip{justify-self:end;display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:999px;font-size:13px;color:var(--muted);background:#fff}
     .chip b{color:var(--text)}
 
-    /* 표 */
+    /* 테이블 (데스크톱 전용) */
     table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:14px;border:1px solid var(--border);background:#fff}
     thead th{text-align:left;font-size:13px;color:#8b93a3;padding:12px;border-bottom:1px solid var(--border);background:linear-gradient(#fff,#fff5fb);position:sticky;top:0;z-index:1}
     tbody td{padding:12px;border-top:1px solid #f7eef4}
@@ -79,17 +79,21 @@
     table th:first-child, table td:first-child { width:120px }
     footer{margin-top:12px;color:var(--muted);font-size:12px;text-align:right}
 
-    /* 모바일 */
+    /* 모바일용 카드 리스트 (모든 카테고리 동일 렌더) */
+    .m-list{ display:none; list-style:none; padding:0; margin:0; }
+    .m-item{ display:flex; align-items:center; gap:10px; padding:12px; border:1px solid var(--border); border-radius:12px; background:#fff; margin-bottom:8px; }
+    .m-item .bp{ min-width:62px; text-align:center; }
+    .m-item .t{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    /* 반응형: 모바일에서 테이블 숨기고 카드리스트 표시 */
     @media (max-width:640px){
       .profile{grid-template-columns:64px 1fr}
       .avatar{width:64px;height:64px}
       .toolbar{grid-template-columns:1fr; gap:8px}
       select, .btn, .chip{width:100%}
-      thead{display:none}
-      table, tbody, tr, td{display:block;width:100%}
-      tbody tr{border-bottom:1px solid var(--border);padding:10px 8px}
-      tbody td{border:none;padding:6px 0}
-      tbody td[data-h]:before{content:attr(data-h) " · ";color:var(--muted);margin-right:6px}
+      table{ display:none }
+      .m-list{ display:block }
+      footer{ text-align:left }
     }
   </style>
 </head>
@@ -115,7 +119,7 @@
         </div>
       </section>
 
-      <!-- 메인: 카테고리 세그먼트 + 툴바 + 표 -->
+      <!-- 메인: 카테고리 세그먼트 + 툴바 + 표/모바일리스트 -->
       <div class="card">
         <!-- 카테고리 버튼 -->
         <div class="seg" role="tablist" aria-label="시그 카테고리">
@@ -137,12 +141,19 @@
           <span class="chip"><span id="catname">씨나인 시그</span> · 총 <b id="count">0</b>개</span>
         </div>
 
+        <!-- 데스크톱 테이블 -->
         <table id="tbl">
           <thead><tr><th>별풍개수</th><th>제목</th></tr></thead>
           <tbody id="tbody">
             <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td></tr>
           </tbody>
         </table>
+
+        <!-- 모바일 카드 리스트 -->
+        <ul id="mlist" class="m-list">
+          <!-- JS가 채움 -->
+        </ul>
+
         <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
       </div>
     </div>
@@ -153,19 +164,13 @@
     const IMG_SRC = "assets/profile.jpg"; // 루트면 "profile.jpg"
     document.getElementById('avatar').src = IMG_SRC;
 
-    /* === 데이터셋 ===
-       - C9: 네가 준 '메인 시그 리스트' 전체를 여기에 붙여 넣으면 됨
-       - PPLY: 쁠리 시리즈 전용
-       - FAN: 열혈 전용(특별 시그)
-    */
+    /* === 데이터셋 === */
     const DATASETS = {
       c9: [
-        // ⬇ 여기 네가 이전에 준 '큰 DATA 배열'을 통으로 붙여넣기
         { bp: 121, title: "진압해" },
         { bp: 123, title: "내얘길들어봐" },
         { bp: 124, title: "왜요왜요" },
         { bp: 125, title: "날라리" },
-        // ... (중략) ...
         { bp: 3069, title: "69어셈블" },
         { bp: 5000,  title:"빅씨나인 (5000~9999)" },
         { bp: 5252,  title:"십만로디" },
@@ -205,6 +210,7 @@
 
     /* DOM */
     const $tbody = document.getElementById('tbody');
+    const $mlist = document.getElementById('mlist');
     const $count = document.getElementById('count');
     const $q = document.getElementById('q');
     const $sort = document.getElementById('sort');
@@ -215,7 +221,7 @@
 
     let currentCat = 'c9';
 
-    function render(rows){
+    function renderDesktop(rows){
       $tbody.innerHTML = '';
       if(!rows.length){
         $tbody.innerHTML = `
@@ -223,18 +229,28 @@
             <td data-h="별풍개수"><span class="badge">없음</span></td>
             <td data-h="제목">등록된 시그가 없습니다</td>
           </tr>`;
-        $count.textContent = '0';
-        $empty.style.display = 'block';
         return;
       }
-      $empty.style.display = 'none';
-      $count.textContent = rows.length.toString();
       rows.forEach(r=>{
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td data-h="별풍개수"><span class="badge">${r.bp}</span></td>
           <td data-h="제목">${r.title}</td>`;
         $tbody.appendChild(tr);
+      });
+    }
+
+    function renderMobile(rows){
+      $mlist.innerHTML = '';
+      if(!rows.length){
+        $mlist.innerHTML = `<li class="m-item"><div class="bp"><span class="badge">없음</span></div><div class="t">등록된 시그가 없습니다</div></li>`;
+        return;
+      }
+      rows.forEach(r=>{
+        const li = document.createElement('li');
+        li.className = 'm-item';
+        li.innerHTML = `<div class="bp"><span class="badge">${r.bp}</span></div><div class="t">${r.title}</div>`;
+        $mlist.appendChild(li);
       });
     }
 
@@ -250,7 +266,14 @@
         case 'title-asc': rows = rows.slice().sort((a,b)=>a.title.localeCompare(b.title)); break;
         case 'title-desc': rows = rows.slice().sort((a,b)=>b.title.localeCompare(a.title)); break;
       }
-      render(rows);
+
+      // 공통 카운트/empty 처리
+      $count.textContent = rows.length.toString();
+      $empty.style.display = rows.length ? 'none' : 'block';
+
+      // 데스크톱/모바일 각각 동일한 구조로 렌더
+      renderDesktop(rows);
+      renderMobile(rows);
     }
 
     /* 이벤트 */
