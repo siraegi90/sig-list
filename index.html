@@ -7,41 +7,33 @@
   <style>
     :root{
       --accent:#ff80ab; --bg:#fff7fb; --card:#ffffff; --text:#2a2a2a;
-      --muted:#7b8494; --border:#f0e3ee; --radius:18px;
-      --shadow:0 10px 30px rgba(255,128,171,.18);
+      --muted:#7b8494; --border:#f0e3ee; --radius:18px; --shadow:0 10px 30px rgba(255,128,171,.18);
+      /* 중앙 레일/사이드 폭과 간격(여기만 바꾸면 전체가 따라 맞음) */
+      --main:700px; --side:300px; --gap:26px;
     }
     *{box-sizing:border-box}
     body{
-      margin:0;
-      background:linear-gradient(180deg,#fff7fb 0%, #fff 70%);
+      margin:0; background:linear-gradient(180deg,#fff7fb 0%, #fff 70%);
       color:var(--text);
-      font:16px/1.55 "Pretendard","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial
+      font:16px/1.55 "Pretendard","Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
     }
 
     /* 바깥 래퍼 */
-    .wrap{max-width:1250px; margin:36px auto 48px; padding:0 18px}
+    .wrap{max-width:1250px; margin:36px auto 48px; padding:0 18px; position:relative}
 
-    /* ✅ 레이아웃: [좌 여백] [메인(700px)] [사이드(300px)] [우 여백] */
-    .layout{
-      display:grid;
-      grid-template-columns: 1fr 700px 300px 1fr;
-      column-gap:26px;
-      align-items:start;
-    }
-    /* 메인은 가운데(2열), 사이드는 오른쪽(3열) */
-    .main{ grid-column:2; }
-    .sidebar{ grid-column:3; position:sticky; top:24px; }
+    /* ✅ 중앙 레일: 프로필/메인 카드가 정확히 가운데에 놓이는 700px 트랙 */
+    .rail{width:var(--main); margin:0 auto}
 
-    /* 1024px 이하에서는 1열, 사이드 숨김 */
-    @media (max-width:1024px){
-      .layout{ grid-template-columns:1fr; }
-      .main{ grid-column:auto; }
-      .sidebar{ display:none; }
+    /* ✅ 사이드바: 중앙선 기준(50%)에서 오른쪽으로 main/2 + gap 만큼 떨어뜨려 배치 */
+    .sidebar{
+      position:sticky; top:24px; width:var(--side);
+      left:calc(50% + (var(--main) / 2) + var(--gap));
     }
+    /* 1024px 이하에서는 사이드 숨김 */
+    @media (max-width:1024px){ .sidebar{display:none} }
 
     /* 카드 공통 */
     .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px}
-    .narrow{max-width:700px; margin:0 auto}
 
     /* 프로필 카드 */
     .profile{display:grid; grid-template-columns:88px 1fr; gap:14px; position:relative; overflow:hidden}
@@ -111,29 +103,29 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- 프로필: 중앙 좁은 폭 유지 -->
-    <section class="card profile narrow" style="margin-bottom:16px">
-      <div class="avatar"><img id="avatar" alt="Profile" /></div>
-      <div>
-        <div class="p-head"><span class="dot"></span><h1>쁠리</h1></div>
-        <div class="p-sub">밝고 귀여운 무드의 방송 ✿ 시그 리스트를 쉽게 찾아보세요</div>
-        <div class="links">
-          <a class="link-btn" href="https://www.youtube.com/@todayisvvely" target="_blank" rel="noopener">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a2.998 2.998 0 0 0-2.112-2.12C19.365 3.5 12 3.5 12 3.5s-7.365 0-9.386.566A2.998 2.998 0 0 0 .502 6.186C0 8.207 0 12 0 12s0 3.793.502 5.814a2.998 2.998 0 0 0 2.112 2.12C4.635 20.5 12 20.5 12 20.5s7.365 0 9.386-.566a2.998 2.998 0 0 0 2.112-2.12C24 15.793 24 12 24 12s0-3.793-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"/></svg>
-            YouTube
-          </a>
-          <a class="link-btn" href="https://www.instagram.com/lee2seol/" target="_blank" rel="noopener">
-            <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm8.5 1.5a4.25 4.25 0 0 1 4.25 4.25v8.5a4.25 4.25 0 0 1-4.25 4.25h-8.5a4.25 4.25 0 0 1-4.25-4.25v-8.5a4.25 4.25 0 0 1 4.25-4.25h8.5zm-4.25 3a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5zm0 1.5a4.25 4.25 0 1 1 0 8.5 4.25 4.25 0 0 1 0-8.5zm5.25-.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25z"/></svg>
-            Instagram
-          </a>
+    <!-- 중앙 레일: 프로필 + 메인 -->
+    <div class="rail">
+      <!-- 프로필(중앙 700px) -->
+      <section class="card profile" style="margin-bottom:16px">
+        <div class="avatar"><img id="avatar" alt="Profile" /></div>
+        <div>
+          <div class="p-head"><span class="dot"></span><h1>쁠리</h1></div>
+          <div class="p-sub">밝고 귀여운 무드의 방송 ✿ 시그 리스트를 쉽게 찾아보세요</div>
+          <div class="links">
+            <a class="link-btn" href="https://www.youtube.com/@todayisvvely" target="_blank" rel="noopener">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a2.998 2.998 0 0 0-2.112-2.12C19.365 3.5 12 3.5 12 3.5s-7.365 0-9.386.566A2.998 2.998 0 0 0 .502 6.186C0 8.207 0 12 0 12s0 3.793.502 5.814a2.998 2.998 0 0 0 2.112 2.12C4.635 20.5 12 20.5 12 20.5s7.365 0 9.386-.566a2.998 2.998 0 0 0 2.112-2.12C24 15.793 24 12 24 12s0-3.793-.502-5.814zM9.75 15.568V8.432L15.818 12 9.75 15.568z"/></svg>
+              YouTube
+            </a>
+            <a class="link-btn" href="https://www.instagram.com/lee2seol/" target="_blank" rel="noopener">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2A5.75 5.75 0 0 0 2 7.75v8.5A5.75 5.75 0 0 0 7.75 22h8.5A5.75 5.75 0 0 0 22 16.25v-8.5A5.75 5.75 0 0 0 16.25 2h-8.5zm8.5 1.5a4.25 4.25 0 0 1 4.25 4.25v8.5a4.25 4.25 0 0 1-4.25 4.25h-8.5a4.25 4.25 0 0 1-4.25-4.25v-8.5a4.25 4.25 0 0 1 4.25-4.25h8.5zm-4.25 3a5.75 5.75 0 1 0 0 11.5 5.75 5.75 0 0 0 0-11.5zm0 1.5a4.25 4.25 0 1 1 0 8.5 4.25 4.25 0 0 1 0-8.5zm5.25-.875a1.125 1.125 0 1 0 0 2.25 1.125 1.125 0 0 0 0-2.25z"/></svg>
+              Instagram
+            </a>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 메인(가운데) + 사이드(오른쪽) -->
-    <div class="layout">
-      <!-- 가운데: 시그 리스트 -->
-      <div class="card main">
+      <!-- 메인 리스트(중앙 700px, 프로필과 완벽 정렬) -->
+      <div class="card">
         <div class="toolbar">
           <input id="q" type="search" placeholder="검색: 제목 / 숫자…" aria-label="검색" />
           <select id="sort" aria-label="정렬">
@@ -147,33 +139,30 @@
         </div>
 
         <table id="tbl">
-          <thead>
-            <tr><th>별풍개수</th><th>제목</th></tr>
-          </thead>
+          <thead><tr><th>별풍개수</th><th>제목</th></tr></thead>
           <tbody id="tbody">
             <tr><td data-h="별풍개수"><span class="badge">없음</span></td><td data-h="제목">등록된 시그가 없습니다</td></tr>
           </tbody>
         </table>
-
         <footer id="empty">데이터를 추가하면 자동으로 표시됩니다.</footer>
       </div>
+    </div><!-- /.rail -->
 
-      <!-- 오른쪽: 사이드바 (sticky) -->
-      <aside class="sidebar">
-        <div class="card side-section">
-          <h3 class="side-title"><span class="dot"></span>쁠리시그</h3>
-          <span class="pill">개인방송 시그</span>
-          <ul class="side-list" id="side-personal"></ul>
-        </div>
+    <!-- 오른쪽 사이드바(중앙선 기준으로 우측에 고정) -->
+    <aside class="sidebar">
+      <div class="card side-section">
+        <h3 class="side-title"><span class="dot"></span>쁠리시그</h3>
+        <span class="pill">개인방송 시그</span>
+        <ul class="side-list" id="side-personal"></ul>
+      </div>
 
-        <div class="card side-section">
-          <h3 class="side-title"><span class="dot"></span>열혈시그</h3>
-          <span class="pill">열혈 TOP</span>
-          <ul class="side-list" id="side-fans"></ul>
-        </div>
-      </aside>
-    </div>
-  </div>
+      <div class="card side-section" style="margin-top:16px">
+        <h3 class="side-title"><span class="dot"></span>열혈시그</h3>
+        <span class="pill">열혈 TOP</span>
+        <ul class="side-list" id="side-fans"></ul>
+      </div>
+    </aside>
+  </div><!-- /.wrap -->
 
   <script>
     /* 프로필 이미지 경로 */
@@ -187,7 +176,7 @@
       { bp: 5782, title: "오직 쁠리" }
     ];
 
-    /* 사이드바 데이터: 필요하면 네가 넣은 배열로 교체 */
+    /* 사이드바 데이터(원하면 여기 SPECIAL을 너 목록으로 교체) */
     const SPECIAL = {
       personal: [
         { bp: 1682, title: "개인방송 시그 — 역팬" },
